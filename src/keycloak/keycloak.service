@@ -1,0 +1,26 @@
+[Unit]
+Description=Keycloak Authentication service
+Documentation=http://www.keycloak.org/documentation.html
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+# Type=idle
+User=keycloak
+Group=keycloak
+Environment=LAUNCH_JBOSS_IN_BACKGROUND=1
+EnvironmentFile=-/etc/sysconfig/keycloak
+LimitNOFILE=102642
+WorkingDirectory=/var/lib/keycloak
+ExecStart=/opt/keycloak/bin/standalone.sh $EXTRA_OPTS
+TimeoutStartSec=60
+TimeoutStopSec=30
+KillSignal=SIGINT
+Restart=always
+PIDFile=/var/run/keycloak/keycloak.pid
+## All outupt will be sent to server.log
+StandardOutput=null
+
+
+[Install]
+WantedBy=multi-user.target

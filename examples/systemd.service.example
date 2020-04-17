@@ -1,0 +1,67 @@
+##
+## Understanding Units
+## https://www.digitalocean.com/community/tutorials/understanding-systemd-units-and-unit-files
+##
+## SystemD Unit file example
+## https://www.freedesktop.org/software/systemd/man/systemd.exec.html
+## https://www.freedesktop.org/software/systemd/man/systemd.unit.html
+## https://www.freedesktop.org/software/systemd/man/systemd.service.html
+## https://www.freedesktop.org/software/systemd/man/systemd.kill.html
+## https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/System_Administrators_Guide/sect-Managing_Services_with_systemd-Unit_Files.html
+
+[Unit]
+Description=My Advanced Service
+After=etcd2.service
+After=docker.service
+
+[Service]
+## One of simple, forking, oneshot, dbus, notify or idle
+Type=simple
+
+
+##
+## Environment Variables
+##
+
+## Key value list space separated
+Environment=Key=value key=value
+
+## can also exist multiple entries
+Environment=Key=value
+
+## Load variables from a file each line should be key=value\n
+EnvironmentFile=/etc/sysconfig/env-file
+
+##
+## Execution Cicle
+##
+
+## Config
+TimeoutStartSec=0
+
+
+## Command to execute prior to the Exec Start, this command may fail (=-)
+ExecStartPre=-/usr/bin/docker kill apache1
+
+## Can be more than one command
+ExecStartPre=-/usr/bin/docker rm apache1
+
+## This command preceds the ExecStart and must not fail
+ExecStartPre=/usr/bin/docker pull coreos/apache
+
+## The script the will be executed to start the service
+ExecStart=/usr/bin/docker run --name apache1 -p 8081:80 coreos/apache /usr/sbin/apache2ctl -D FOREGROUND
+
+## Execute script after successful execution of ExecStart
+ExecStartPost=/usr/bin/etcdctl set /domains/example.com/10.10.10.123:8081 running
+
+## Script to Stop the service
+ExecStop=/usr/bin/docker stop apache1
+
+## Script to execute after the service has stoped
+ExecStopPost=/usr/bin/etcdctl rm /domains/example.com/10.10.10.123:8081
+
+
+
+[Install]
+WantedBy=multi-user.target

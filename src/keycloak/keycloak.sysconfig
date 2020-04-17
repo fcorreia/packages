@@ -1,0 +1,10 @@
+##
+## /etc/sysconfig/keycloak
+## Environment Variables for Keycloak Service
+##
+
+JBOSS_HOME=/opt/keycloak
+JBOSS_LOG_DIR=/var/log/keycloak
+JAVA_OPTS=-Xms1024m -Xmx20480m -XX:MaxPermSize=768m
+
+#EXTRA_OPTS=-b 0.0.0.0
