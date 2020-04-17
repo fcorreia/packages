@@ -1,0 +1,237 @@
+* Tue Jan 28 2020 Fedora Release Engineering <releng@fedoraproject.org> - 2.11.1-15
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
+
+* Wed Jul 24 2019 Fedora Release Engineering <releng@fedoraproject.org> - 2.11.1-14
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
+
+* Thu May 30 2019 Jitka Plesnikova <jplesnik@redhat.com> - 2.11.1-13
+- Perl 5.30 rebuild
+
+* Thu Jan 31 2019 Fedora Release Engineering <releng@fedoraproject.org> - 2.11.1-12
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
+
+* Thu Jul 12 2018 Fedora Release Engineering <releng@fedoraproject.org> - 2.11.1-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
+
+* Tue Jul 03 2018 Petr Pisar <ppisar@redhat.com> - 2.11.1-10
+- Perl 5.28 rebuild
+
+* Thu Mar 08 2018 jsmith <jsmith.fedora@gmail.com> - 2.11.1-9
+- Remove call to ldconfig_scriptlets macro, as it conflicts with %%post
+* Wed Feb 14 2018 Jared Smith <jsmith@fedoraproject.org> - 2.11.1-8
+- Replace post and postun scriptlets with ldconfig_scriptlets macro invocation
+
+* Wed Feb 07 2018 Fedora Release Engineering <releng@fedoraproject.org> - 2.11.1-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
+
+* Wed Aug 02 2017 Fedora Release Engineering <releng@fedoraproject.org> - 2.11.1-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Binutils_Mass_Rebuild
+
+* Wed Jul 26 2017 Fedora Release Engineering <releng@fedoraproject.org> - 2.11.1-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
+
+* Fri Jun 16 2017 Jared Smith <jsmith@fedoraproject.org> - 2.11.1-4
+- Bump revision for new version of Perl
+
+* Wed May 24 2017 Jared Smith <jsmith@fedoraproject.org> - 2.11.1-3
+- Add missing Requires and BuildRequires
+
+* Wed May 24 2017 Jared Smith <jsmith@fedoraproject.org> - 2.11.1-2
+- Fix dependencies
+- Replace defines with globals
+- Fix incorrect FSF addresses with a little sed magic
+
+* Wed Mar 30 2016 Jared Smith <jsmith@fedoraproject.org> - 2.11.1-1
+- Update to upstream 2.11.1 release
+- Add systemd support
+
+* Wed Mar 30 2016 Petr Pisar <ppisar@redhat.com> - 2.10.0-8
+- Fix GCC warning for unused variables (bug #1306634)
+- Modernize spec file
+
+* Wed Feb 03 2016 Fedora Release Engineering <releng@fedoraproject.org> - 2.10.0-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
+
+* Thu Jul 23 2015 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 2.10.0-6
+- Move rules file to %%{_udevrulesdir} (#1229955)
+
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.10.0-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Sun Jun 14 2015 Bruno Wolff III - 2.10.0-4
+- Fix FTBFS from gcc error due to bad use of logical negation operator
+- This should also take care of the rebuild needed for perl
+
+* Sat Jun 06 2015 Jitka Plesnikova <jplesnik@redhat.com> - 2.10.0-3
+- Perl 5.22 rebuild
+
+* Fri Nov 07 2014 Petr Pisar <ppisar@redhat.com> - 2.10.0-2
+- Build-require perl-podlators for pod2man tool (bug #1161158)
+
+* Fri Oct 24 2014 Jeffrey C. Ollie <jeff@ocjtech.us> - 2.10.0-1
+- Update to 2.10.0
+
+* Wed Aug 27 2014 Jitka Plesnikova <jplesnik@redhat.com> - 2.7.0-6
+- Perl 5.20 rebuild
+
+* Sat Aug 16 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.7.0-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.7.0-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sat Aug 17 2013 Bruno Wolff III <bruno@wolff.to> - 2.7.0-3
+- blacklist wcopenpci so that it doesn't get loaded until the right time
+
+* Sat Aug 17 2013 Bruno Wolff III <bruno@wolff.to> - 2.7.0-2
+- Include user.h as dahdi_config.h to avoid issue noted in bug 783890
+
+* Sat Aug 17 2013 Bruno Wolff III <bruno@wolff.to> - 2.7.0-1
+- Move to current upstream release
+- Changlog is available at http://git.asterisk.org/gitweb/?p=dahdi/tools.git;a=shortlog
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.1-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Jul 18 2013 Petr Pisar <ppisar@redhat.com> - 2.4.1-8
+- Perl 5.18 rebuild
+
+* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.1-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Wed Jul 18 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.1-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 2.4.1-5
+- Perl 5.16 rebuild
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.1-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Fri Jun 17 2011 Marcela Mašláňová <mmaslano@redhat.com> - 2.4.1-3
+- Perl mass rebuild
+
+* Fri Jun 10 2011 Marcela Mašláňová <mmaslano@redhat.com> - 2.4.1-2
+- Perl 5.14 mass rebuild
+
+* Fri Mar  4 2011  <jeff@ocjtech.us> - 2.4.1-1
+- The Asterisk Development Team is pleased to announce the release of
+- DAHDI-Linux and DAHDI-Tools version 2.4.1.
+-
+- DAHDI-Linux 2.4.1, DAHDI-Tools 2.4.1, and DAHDI-Linux-Complete 2.4.1+2.4.1 are
+- available for immediate download at:
+- http://downloads.asterisk.org/pub/telephony/dahdi-linux
+- http://downloads.asterisk.org/pub/telephony/dahdi-tools
+- http://downloads.asterisk.org/pub/telephony/dahdi-linux-complete
+-
+- 2.4.1 is a maintenance release of the DAHDI drivers and tools packages. Some of
+- the more notable changes are:
+-
+- * Support for compilation against kernel versions from 2.6.9 up to and including
+-  2.6.38-rc6.
+-
+- * wct4xxp: PCI-express cards go through an extended reset at start by default.
+-
+- * wcte12xp, wctdm24xxp: Disable read-line multiple PCI command, which increases
+-  compatibility in some systems.
+-
+- * xpp: Fixes init error for PRI devices with < 4 ports.
+-
+- * tonezone: Add Macao, China to tone zone data.
+-
+- * dahdi_genconf: Don't generate configurations that use channel 16 on E1 CAS.
+-
+- For a full list of changes in these releases, please see the ChangeLogs at
+- http://svn.asterisk.org/svn/dahdi/linux/tags/2.4.1/ChangeLog and
+- http://svn.asterisk.org/svn/dahdi/tools/tags/2.4.1/ChangeLog
+-
+- Issues found in these release candidates can be reported in the DAHDI-linux or
+- DAHDI-tools project at https://issues.asterisk.org
+
+* Wed Feb  9 2011 Jeffrey C. Ollie <jeff@ocjtech.us> - 2.4.0-2
+- Make library requirements architecture specific.
+
+* Wed Feb  9 2011 Jeffrey C. Ollie <jeff@ocjtech.us> - 2.4.0-1
+-
+- In addition to several bug fixes, the most significant changes from the
+- 2.3.0 release are:
+-
+- General DAHDI Changes:
+-
+- * Added DAHDI_MAINT_ALARM_SIM maintenance mode for drivers that
+-  support alarm simulation (wct4xxp).  This is only used by
+-  dahdi_maint and doesn't change the ABI.
+-
+- * Span callbacks are moved out of the dahdi_span structure potentially
+-  saving memory when a single driver implements multiple spans.
+-
+- Changes to dahdi-tools:
+-
+- * dahdi_maint: Added support for simulating alarm conditions.
+-
+- * dahdi_scan: Report more detailed alarm information.
+-
+- * xpp_fxloader:
+-  - Load firmware in the background
+-  - Support 1163 twinstar devices
+-  - A delay loop for older kernels (e.g. 2.6.18)
+-
+- * astribank_is_starting does not depend on libusb.
+-
+- * Allow using CONNECTOR/LABEL in genconf_parameters for pri_termtype
+-
+- For a full list of changes in these releases, please see the ChangeLogs at
+- http://svn.asterisk.org/svn/dahdi/linux/tags/2.4.0/ChangeLog and
+- http://svn.asterisk.org/svn/dahdi/tools/tags/2.4.0/ChangeLog
+
+* Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.3.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
+* Sat Aug  7 2010 Jeffrey C. Ollie <jeff@ocjtech.us> - 2.3.0-1
+- Update to 2.3.0
+
+* Tue Jun 01 2010 Marcela Maslanova <mmaslano@redhat.com> - 2.1.0.2-10
+- Mass rebuild with perl-5.12.0
+
+* Fri Dec  4 2009 Stepan Kasal <skasal@redhat.com> - 2.1.0.2-9
+- rebuild against perl 5.10.1
+
+* Wed Aug 19 2009 Itamar Reis Peixoto <itamar@ispbrasil.com.br> - 2.1.0.2-8
+- fix bz 495453 (/etc/modprobe.d/dahdi.blacklist and /etc/modprobe.d/dahdi doesn't end with.conf)
+
+* Fri Jul 24 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.1.0.2-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
+
+* Fri May  8 2009 Michael Schwendt <mschwendt@fedoraproject.org> - 2.1.0.2-6
+- Let dahdi-tools conflict with zaptel-utils (#472357).
+
+* Tue Feb 24 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.1.0.2-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
+
+* Sun Jan  4 2009 Jeffrey C. Ollie <jeff@ocjtech.us> - 2.1.0.2-4
+- Update to latest.
+
+* Thu Nov 20 2008 Jeffrey C. Ollie <jeff@ocjtech.us> - 2.0.0-4
+- Fix zaptel-lib(s) conflicts
+
+* Sat Oct 25 2008 Jeffrey C. Ollie <jeff@ocjtech.us> - 2.0.0-3
+- Add conflicts/requires to help make sure that we get dahdi-tools-libs and not zaptel-libs
+
+* Fri Oct 10 2008 Jeffrey C. Ollie <jeff@ocjtech.us> - 2.0.0-2
+- Don't package sethdlc even if it gets built.
+
+* Thu Oct  9 2008 Jeffrey C. Ollie <jeff@ocjtech.us> - 2.0.0-1
+- Cleanups suggested by reviewers
+
+* Fri Oct  3 2008 Jeffrey C. Ollie <jeff@ocjtech.us> - 2.0.0-0.4
+- Update to final release.
+
+* Wed Sep 10 2008 Jeffrey C. Ollie <jeff@ocjtech.us> - 2.0.0-0.3.rc2
+- Install dahdi/user.h header
+
+* Mon Sep  8 2008 Jeffrey C. Ollie <jeff@ocjtech.us> - 2.0.0-0.2.rc2
+- Update dahdi-linux to 2.0.0rc4
+
+* Fri Sep  5 2008 Jeffrey C. Ollie <jeff@ocjtech.us> - 2.0.0-0.1.rc2
+- First version for Fedora
+

@@ -1,0 +1,5 @@
+[local]
+name=CentOS-$releasever - local packages for $basearch
+baseurl=file:///workspace/repository/el$releasever/third-party
+enabled=0
+gpgcheck=0

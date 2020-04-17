@@ -1,0 +1,11 @@
+diff -Naur dahdi-tools-2.10.0.old/blacklist.sample dahdi-tools-2.10.0.new/blacklist.sample
+--- dahdi-tools-2.10.0.old/blacklist.sample	2014-08-13 15:15:12.000000000 -0500
++++ dahdi-tools-2.10.0.new/blacklist.sample	2014-10-24 15:02:36.086655297 -0500
+@@ -12,6 +12,7 @@
+ blacklist wctdm
+ blacklist wctc4xxp
+ blacklist wcb4xxp
++blacklist wcopenpci
+ blacklist wcaxx
+ blacklist wcte43x
+ 

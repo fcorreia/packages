@@ -1,0 +1,44 @@
+[Unit]
+Description=The DAHDI drivers allow you to use your linux computer to accept incoming data and voice interfaces
+After=local-fs.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+
+Environment=DAHDI_MODULES_FILE=/etc/dahdi/modules
+Environment=DAHDI_CFG_CMD=/usr/sbin/dahdi_cfg
+Environment=XPP_SYNC=auto
+EnvironmentFile=-/etc/dahdi/init.conf
+
+ExecStartPre=/usr/bin/test -f ${DAHDI_MODULES_FILE}
+ExecStartPre=/usr/bin/test -x ${DAHDI_CFG_CMD}
+ExecStartPre=/usr/sbin/modprobe dahdi
+# Note:  Some of the commands in the following script are fatal, others are not.
+ExecStart=/bin/sh -c '\
+	/usr/bin/sed -e "s/#.*//" ${DAHDI_MODULES_FILE} | xargs -r -n1 /usr/sbin/modprobe ;\
+	if [ "$ASTERISK_SUPPORTS_DAHDI_HOTPLUG" = "yes" ]; then \
+		aas_param="/sys/module/dahdi/parameters/auto_assign_spans" ;\
+		aas=$(cat "$aas_param" 2>/dev/null) ;\
+		if [ "$aas" -ge 0 ]; then \
+			/usr/share/dahdi/waitfor_xpds || exit 1 ;\
+		fi ;\
+	fi ;\
+	/usr/share/dahdi/dahdi_auto_assign_compat ;\
+	$DAHDI_CFG_CMD || exit 1 ;\
+	[ -x /usr/sbin/fxotune ] && [ -r /etc/fxotune.conf ] && /usr/sbin/fxotune -s ;\
+	[ -e /sys/bus/astribanks ] && LC_ALL=C /usr/sbin/xpp_sync "$XPP_SYNC" ;\
+	if echo /var/lib/digium/licenses/HPEC-*.lic | grep -v "\*" | grep -q .; then \
+		if [ ! -x /usr/sbin/dahdihpec_enable ]; then \
+			echo "The dahdihpec_enable binary is not installed" ;\
+			exit 1 ;\
+		fi ;\
+		/usr/sbin/dahdihpec_enable || exit 1 ;\
+	fi ;\
+	echo Done ;\
+'
+
+ExecStop=/bin/sh -c '/usr/sbin/modprobe -r $(/usr/bin/sed -e "s/#.*//" ${DAHDI_MODULES_FILE}) ${DAHDI_UNLOAD_MODULES}'
+
+[Install]
+WantedBy=multi-user.target

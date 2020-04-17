@@ -1,0 +1,9 @@
+## External Files
+*.gz.asc
+*.tar.gz
+*.zip
+*.rpm
+
+## IDE
+**/.idea
+*.iml
