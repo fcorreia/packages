@@ -1,0 +1,22 @@
+[Unit]
+Description=Hashicorp Consul Agent
+Documentation=https://www.consul.io/docs/index.html
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=consul
+Group=consul
+Environment=GOMAXPROCS=2
+EnvironmentFile=-/etc/sysconfig/consul
+WorkingDirectory=/var/lib/consul
+ExecStart=/usr/sbin/consul agent $OPTIONS -data-dir=/var/lib/consul -config-dir=/etc/consul.d
+ExecReload=/bin/kill -HUP $MAINPID
+KillSignal=SIGINT
+TimeoutStartSec=10
+TimeoutStopSec=10
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

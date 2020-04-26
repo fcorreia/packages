@@ -1,0 +1,7 @@
+##
+## [Consul Environment configuration]
+##
+## Additional Options
+# OPTIONS="-server -bootstrap-expect=1 -bind=172.16.3.40 -ui"
+OPTIONS=""
+
