@@ -7,6 +7,7 @@ RPM Packaging Notes
 
 ## Documentation
  - [Fedora :: Referencing Source](https://fedoraproject.org/wiki/Packaging:SourceURL?rd=Packaging/SourceURL)
+ - [Fedora :: RPM Macros](https://docs.fedoraproject.org/en-US/packaging-guidelines/RPMMacros/)
 
 ## CoreOS :: SystemD
  - [MAN :: SystemD](https://www.freedesktop.org/software/systemd/man/systemd.service.html)

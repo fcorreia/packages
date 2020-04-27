@@ -11,3 +11,4 @@ Lucent.
 ## References
  - https://src.fedoraproject.org/rpms/libpri
  - [Building and Installing LibPRI](https://wiki.asterisk.org/wiki/display/AST/Building+and+Installing+DAHDI)
+ - https://www.voip-info.org/asterisk-libpri/

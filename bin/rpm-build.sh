@@ -102,10 +102,6 @@ function validate_build(){
         if [ ${#LINE[@]} -gt 2 ]; then
             RPM_VERSION=${LINE[2]}
         fi
-        if [ "x${RPM_VERSION}" == "x"  ]; then
-            echo "ERROR: could not determine package version"
-            exit 1
-        fi
     fi
 
 
@@ -132,7 +128,10 @@ function submit_spec_rsync(){
 function submit_spec(){
     validate_build
 
-
+    if [ "x${RPM_VERSION}" == "x"  ]; then
+        echo "ERROR: could not determine package version"
+        exit 1;
+    fi
 
     RPM_TMP_DIR=$(mktemp -d)
     RPM_ARCHIVE_DIR="${RPM_TMP_DIR}/${RPM_ARCHIVE}"
@@ -204,11 +203,12 @@ function build_rpm(){
 
     echo "Build package: ${RPM_NAME}, Release: ${RPM_RELEASE}"
     ## --buildroot=${PWD}/rpmbuild
-    rpmbuild    --define='%rpm_name  %{expand:   %%(echo ${RPM_NAME})}'  \
-                --define='%rpm_version  %{expand:%%(echo ${RPM_VERSION})}'  \
-                --define='%rpm_release  %{expand:%%(echo ${RPM_RELEASE} )}'  \
-                ${RPM_SPEC} \
-                -ba
+    RPMBUILD_OPTIONS="--define='%rpm_name  %{expand:   %%(echo ${RPM_NAME})}' --define='%rpm_release  %{expand:%%(echo ${RPM_RELEASE} )}'"
+    if [ ! "x" == "${RPM_VERSION}x" ]; then
+      RPMBUILD_OPTIONS="${RPMBUILD_OPTIONS} --define='%rpm_version  %{expand:%%(echo ${RPM_VERSION})}'"
+    fi
+
+    rpmbuild ${RPMBUILD_OPTIONS} ${RPM_SPEC} -ba
 ##	--buildroot=${HOME}/rpmbuild \
 }
 
@@ -217,11 +217,12 @@ function build_rpm(){
 function rpm_sources {
     validate_build
 
+    SPECTOOL_OPTIONS="--define \"rpm_name ${RPM_NAME}\" --define \"rpm_release ${RPM_RELEASE}\""
+    if [ ! "x" == "${RPM_VERSION}x" ]; then
+      SPECTOOL_OPTIONS="${SPECTOOL_OPTIONS} --define \"rpm_version ${RPM_VERSION}\""
+    fi
 
-    spectool    --define "rpm_name ${RPM_VERSION}"  \
-                --define "rpm_version ${RPM_VERSION}"  \
-                --define "rpm_release ${RPM_RELEASE}"  \
-                --get-files --sourcedir  ${RPM_SPEC}
+    spectool ${SPECTOOL_OPTIONS} --get-files --sourcedir  ${RPM_SPEC}
 }
 
 
