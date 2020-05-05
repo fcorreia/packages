@@ -1,0 +1,23 @@
+[Unit]
+Description=Apache Kafka Embedded Zookeeper server (Kafka)
+Documentation=http://zookeeper.apache.org
+Requires=network.target
+After=network-online.target
+Wants=network-online.target
+
+
+
+[Service]
+Type=simple
+User=kafka
+Group=kafka
+EnvironmentFile=-/etc/sysconfig/kafka-zookeeper
+WorkingDirectory=/var/lib/kafka-zookeeper
+ExecStart=/opt/kafka/bin/zookeeper-server-start.sh /etc/kafka/zookeeper.properties
+ExecStop=/opt/kafka/bin/zookeeper-server-stop.sh
+TimeoutStartSec=30
+TimeoutStopSec=30
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

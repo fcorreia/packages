@@ -1,0 +1,23 @@
+[Unit]
+Description=Apache Kafka server (broker)
+Documentation=http://kafka.apache.org/documentation.html
+Requires=network.target
+After=network-online.target
+Wants=network-online.target
+
+
+[Service]
+Type=simple
+User=kafka
+Group=kafka
+EnvironmentFile=-/etc/sysconfig/kafka
+WorkingDirectory=/var/lib/kafka
+ExecStart=/opt/kafka/bin/kafka-server-start.sh /etc/kafka/server.properties
+ExecStop=/opt/kafka/bin/kafka-server-stop.sh
+TimeoutStartSec=30
+TimeoutStopSec=30
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
