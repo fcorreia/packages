@@ -34,7 +34,7 @@ PKG_RELEASE_NAME=${PKG_RELEASE_NAME:-"skywalker"}
 DOCKER_IMAGE_NAME="build/centos:7"
 DOCKER_IMAGE_DOCKERFILE="centos7.Dockerfile"
 DOCKER_CONTAINER_NAME=${DOCKER_CONTAINER_NAME:-"build-el7"}
-
+YUM_LOCAL_REPOSITORY=${YUM_LOCAL_REPOSITORY:-"/opt/repository"}
 
 function get_real_path {
     LINUX_OS=$(uname | grep Linux)
@@ -288,6 +288,8 @@ function container_run_first_time(){
     docker run  \
            --name ${DOCKER_CONTAINER_NAME}  -it \
            -v $HOME/Workspace:/workspace \
+           -v /opt/docker/repository:/opt/repository \
+           -e YUM_LOCAL_REPOSITORY=${YUM_LOCAL_REPOSITORY} \
            --hostname ${DOCKER_CONTAINER_NAME} \
            ${DOCKER_IMAGE_NAME} /usr/bin/bash
 }
