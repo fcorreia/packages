@@ -1,0 +1,21 @@
+[Unit]
+Description=Redis Server
+Documentation=https://redis.io/commands/
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=redis
+Group=redis
+EnvironmentFile=-/etc/sysconfig/redis
+WorkingDirectory=/var/lib/redis
+ExecStart=/usr/bin/redis-server /etc/redis/redis.conf
+KillSignal=SIGTERM
+TimeoutStartSec=10
+TimeoutStopSec=10
+PIDFile=/var/run/redis/redis.pid
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
