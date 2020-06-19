@@ -1,15 +1,6 @@
 diff -up redis.conf.orig redis.conf
 --- redis.conf.orig     2020-06-09 10:19:30.000000000 +0000
 +++ redis.conf  2020-06-19 12:02:22.000000000 +0000
-@@ -203,7 +203,7 @@ tcp-keepalive 300
-
- # By default Redis does not run as a daemon. Use 'yes' if you need it.
- # Note that Redis will write a pid file in /var/run/redis.pid when daemonized.
--daemonize no
-+daemonize yes
-
- # If you run Redis from upstart or systemd, Redis can interact with your
- # supervision tree. Options:
 @@ -214,7 +214,7 @@ daemonize no
  #                        UPSTART_JOB or NOTIFY_SOCKET environment variables
  # Note: these supervision methods only signal "process is ready."

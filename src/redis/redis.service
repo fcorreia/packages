@@ -1,3 +1,9 @@
+## Configuration
+# Systemd       => redis.conf
+# Type=notify   => daemonize no,    supervised systemd
+# Type=exec     => daemonize no,    supervised no
+# Type=forking  => daemonize yes,   supervised no
+
 [Unit]
 Description=Redis Server
 Documentation=https://redis.io/commands/
@@ -5,15 +11,17 @@ Requires=network-online.target
 After=network-online.target
 
 [Service]
-Type=simple
+Type=notify
 User=redis
 Group=redis
 EnvironmentFile=-/etc/sysconfig/redis
 WorkingDirectory=/var/lib/redis
 ExecStart=/usr/bin/redis-server /etc/redis/redis.conf
-KillSignal=SIGTERM
-TimeoutStartSec=10
-TimeoutStopSec=10
+ExecStop=/usr/bin/redis-cli -p 6379 shutdown
+ExecReload=/bin/kill -USR2 $MAINPID
+#KillSignal=SIGTERM
+#TimeoutStartSec=10
+#TimeoutStopSec=10
 PIDFile=/var/run/redis/redis.pid
 Restart=on-failure
 
