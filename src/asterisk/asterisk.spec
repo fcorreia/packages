@@ -1,7 +1,4 @@
 
-#%define distnum %{expand:%%(/usr/lib/rpm/redhat/dist.sh --distnum)}
-#%define disttype %{expand:%%(/usr/lib/rpm/redhat/dist.sh --disttype)}
-
 ##
 %define _user       asterisk
 %define _group      asterisk
@@ -64,7 +61,7 @@
 
 Summary:	Asterisk, The Open Source PBX
 Name:		asterisk
-Version:    16.9.0
+Version:    16.13.0
 Release:    %{rpm_release}.%{disttype}%{distnum}
 License:	GPL v2
 Group:		Applications/System
@@ -188,9 +185,6 @@ BuildRequires:    ilbc-devel
 
 # res_rtp_asterisk
 BuildRequires:    libuuid-devel
-
-# res_resolver_unbound
-BuildRequires:    unbound-devel
 
 %if 0%{?corosync}
 BuildRequires:    corosynclib-devel
@@ -805,11 +799,8 @@ echo "**************************************************************************
 cat menuselect.makeopts
 echo "*******************************************************************************"
 
-%if 0%{?fedora}
-%configure --with-imap=system --with-gsm=/usr --with-ilbc=/usr --with-libedit=yes --with-srtp --with-pjproject-bundled --with-externals-cache=%{_builddir}/asterisk-%{version}%{?_rc:-rc%{_rc}}%{?_beta:-beta%{_beta}}/cache LDFLAGS="%{ldflags}" NOISY_BUILD=1 CPPFLAGS="-fPIC"
-%else
+## Generic configuration, assuming always above or equal centOS 7
 %configure --with-imap=system --with-gsm=/usr --with-ilbc=/usr --with-libedit=yes --with-srtp --with-jansson-bundled --with-pjproject-bundled --with-externals-cache=%{_builddir}/asterisk-%{version}%{?_rc:-rc%{_rc}}%{?_beta:-beta%{_beta}}/cache LDFLAGS="%{ldflags}" NOISY_BUILD=1 CPPFLAGS="-fPIC"
-%endif
 
 %make_build menuselect-tree NOISY_BUILD=1
 %{__perl} -n -i -e 'print unless /openr2/i' menuselect-tree
@@ -1263,7 +1254,6 @@ fi
 %{_libdir}/asterisk/modules/res_pjproject.so
 %{_libdir}/asterisk/modules/res_realtime.so
 %{_libdir}/asterisk/modules/res_remb_modifier.so
-%{_libdir}/asterisk/modules/res_resolver_unbound.so
 %{_libdir}/asterisk/modules/res_rtp_asterisk.so
 %{_libdir}/asterisk/modules/res_rtp_multicast.so
 #%%{_libdir}/asterisk/modules/res_sdp_translator_pjmedia.so
@@ -1302,6 +1292,11 @@ fi
 %{_sbindir}/smsq
 %{_sbindir}/stereorize
 %{_sbindir}/streamplayer
+
+## Extra binaries
+%{_sbindir}/check_expr
+%{_sbindir}/check_expr2
+%{_sbindir}/conf2ael
 
 %{_mandir}/man8/astdb2bdb.8*
 %{_mandir}/man8/astdb2sqlite3.8*
@@ -1729,5 +1724,8 @@ fi
 %endif
 
 %changelog
+* Thu Sep 18 2020 Francisco Correia <fcorreia@users.noreply.github.com> - 16.13.0
+- Packaging for the latest 16 LTS version
+
 * Thu Apr 16 2020 Francisco Correia <fcorreia@users.noreply.github.com> - 16.9.0
 - Initial Spec file from Fedora project: https://src.fedoraproject.org/rpms/asterisk.git

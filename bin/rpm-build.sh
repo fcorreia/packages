@@ -108,6 +108,27 @@ function validate_build(){
     RPM_ARCHIVE="${RPM_NAME}-${RPM_VERSION}"
     RPM_ARCHIVE_FILE="${RPM_ARCHIVE}-source.tar.gz"
 
+
+     ## SNAPSHOT Version
+    if [ "x${X_RELEASE_FINAL}" == "x" ]; then
+
+        if [ -z $USER_REV ]; then
+            ## only supported after git 2
+            USER_REV=$(git log --format=%cd.g%h --date=format:%y%m%d%H%M -n 1)
+            ##USER_REV=$(git log --format=%ct.g%h -n 1)
+        fi
+
+        export RPM_RELEASE="r${USER_REV}"
+    else
+        ## Final Release
+        if [ -z $USER_REV ]
+        then
+            export RPM_RELEASE="${PKG_RELEASE_NUMBER}.${PKG_RELEASE_NAME}"
+        else
+            export RPM_RELEASE="${USER_REV}"
+        fi
+    fi
+
 }
 
 ##
@@ -178,29 +199,6 @@ function build_rpm(){
     validate_build
 
 
-
-    ## SNAPSHOT Version
-    if [ "x${X_RELEASE_FINAL}" == "x" ]; then
-
-        if [ -z $USER_REV ]; then
-            ## only supported after git 2
-            USER_REV=$(git log --format=%cd.g%h --date=format:%y%m%d%H%M -n 1)
-            ##USER_REV=$(git log --format=%ct.g%h -n 1)
-        fi
-
-        export RPM_RELEASE="r${USER_REV}"
-    else
-        ## Final Release
-        if [ -z $USER_REV ]
-        then
-            export RPM_RELEASE="${PKG_RELEASE_NUMBER}.${PKG_RELEASE_NAME}"
-        else
-            export RPM_RELEASE="${USER_REV}"
-        fi
-    fi
-
-
-
     echo "Build package: ${RPM_NAME}, Release: ${RPM_RELEASE}"
     ## --buildroot=${PWD}/rpmbuild
     RPMBUILD_OPTIONS="--define='%rpm_name  %{expand:   %%(echo ${RPM_NAME})}' --define='%rpm_release  %{expand:%%(echo ${RPM_RELEASE} )}'"
@@ -208,6 +206,7 @@ function build_rpm(){
       RPMBUILD_OPTIONS="${RPMBUILD_OPTIONS} --define='%rpm_version  %{expand:%%(echo ${RPM_VERSION})}'"
     fi
 
+    echo "> rpmbuild ${RPMBUILD_OPTIONS} ${RPM_SPEC} -ba"
     rpmbuild ${RPMBUILD_OPTIONS} ${RPM_SPEC} -ba
 ##	--buildroot=${HOME}/rpmbuild \
 }
@@ -222,6 +221,7 @@ function rpm_sources {
       SPECTOOL_OPTIONS="${SPECTOOL_OPTIONS} --define \"rpm_version ${RPM_VERSION}\""
     fi
 
+    echo "> spectool ${SPECTOOL_OPTIONS} --get-files --sourcedir  ${RPM_SPEC}"
     spectool ${SPECTOOL_OPTIONS} --get-files --sourcedir  ${RPM_SPEC}
 }
 
