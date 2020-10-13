@@ -50,13 +50,12 @@
 %global           phone      1
 %global           xmpp       1
 %endif
-%global           meetme     0
-%global           ooh323     0
+%global           meetme     1
+%global           ooh323     1
 
 
 ## Building options, things to include in the package
 %global           ext_mp3    1
-%global           lib_nbs    1
 
 
 Summary:	Asterisk, The Open Source PBX
@@ -99,7 +98,7 @@ Source9:          http://www.digip.org/jansson/releases/jansson-%{jansson_versio
 Patch0:           asterisk-mariadb.patch
 %endif
 
-%if 0%{?fedora} || 0%{?rhel} >=7
+%if 0%{?fedora} || 0%{?rhel} >=8
 Patch1:           asterisk-16.1.0-explicit-python3.patch
 %endif
 
@@ -506,13 +505,6 @@ Requires: asterisk = %{version}-%{release}
 H.323 channel for Asterisk using the Objective Systems Open H.323 for C library.
 %endif
 
-%package oss
-Summary: Modules for Asterisk that use OSS sound drivers
-Requires: asterisk = %{version}-%{release}
-
-%description oss
-Modules for Asterisk that use OSS sound drivers.
-
 %package phone
 Summary: Channel driver for Quicknet Technologies, Inc.'s Telephony cards
 Requires: asterisk = %{version}-%{release}
@@ -560,13 +552,6 @@ Requires: asterisk = %{version}-%{release}
 
 %description skinny
 Modules for Asterisk that support the SCCP/Skinny protocol.
-
-%package sip
-Summary: Legacy SIP channel driver for Asterisk
-Requires: asterisk = %{version}-%{release}
-
-%description sip
-Legacy SIP channel driver for Asterisk
 
 %if 0%{?snmp}
 %package snmp
@@ -682,7 +667,7 @@ echo '*************************************************************************'
 %patch0 -p1
 %endif
 
-%if 0%{?fedora} || 0%{?rhel} >=7
+%if 0%{?fedora} || 0%{?rhel} >=8
 %patch1 -p1
 %endif
 
@@ -703,77 +688,17 @@ rm main/fskmodem.c.old
 
 chmod -x contrib/scripts/dbsep.cgi
 
-%if ! 0%{?corosync}
-%{__perl} -pi -e 's/^MENUSELECT_RES=(.*)$/MENUSELECT_RES=\1 res_corosync/g' menuselect.makeopts
-%endif
-
-%if ! 0%{?mysql}
-%{__perl} -pi -e 's/^MENUSELECT_ADDONS=(.*)$/MENUSELECT_ADDONS=\1 res_config_mysql app_mysql cdr_mysql/g' menuselect.makeopts
-%endif
-
-%if ! 0%{?postgresql}
-%{__perl} -pi -e 's/^MENUSELECT_RES=(.*)$/MENUSELECT_RES=\1 res_config_pgsql/g' menuselect.makeopts
-%{__perl} -pi -e 's/^MENUSELECT_CDR=(.*)$/MENUSELECT_CDR=\1 cdr_pgsql/g' menuselect.makeopts
-%{__perl} -pi -e 's/^MENUSELECT_CEL=(.*)$/MENUSELECT_CEL=\1 cel_pgsql/g' menuselect.makeopts
-%endif
-
-%if ! 0%{?radius}
-%{__perl} -pi -e 's/^MENUSELECT_CDR=(.*)$/MENUSELECT_CDR=\1 cdr_radius/g' menuselect.makeopts
-%{__perl} -pi -e 's/^MENUSELECT_CEL=(.*)$/MENUSELECT_CEL=\1 cel_radius/g' menuselect.makeopts
-%endif
-
-%if ! 0%{?snmp}
-%{__perl} -pi -e 's/^MENUSELECT_RES=(.*)$/MENUSELECT_RES=\1 res_snmp/g' menuselect.makeopts
-%endif
-
-%if ! 0%{?misdn}
-%{__perl} -pi -e 's/^MENUSELECT_CHANNELS=(.*)$/MENUSELECT_CHANNELS=\1 chan_misdn/g' menuselect.makeopts
-%endif
-
-%if ! 0%{?jack}
-%{__perl} -pi -e 's/^MENUSELECT_APPS=(.*)$/MENUSELECT_APPS=\1 app_jack/g' menuselect.makeopts
-%endif
-
-%if ! 0%{?ldap}
-%{__perl} -pi -e 's/^MENUSELECT_RES=(.*)$/MENUSELECT_RES=\1 res_config_ldap/g' menuselect.makeopts
-%endif
-
-%if ! 0%{?gmime}
-%{__perl} -pi -e 's/^MENUSELECT_RES=(.*)$/MENUSELECT_RES=\1 res_http_post/g' menuselect.makeopts
-%endif
-
-%if ! 0%{xmpp}
-%{__perl} -pi -e 's/^MENUSELECT_RES=(.*)$/MENUSELECT_RES=\1 res_xmpp/g' menuselect.makeopts
-%{__perl} -pi -e 's/^MENUSELECT_CHANNELS=(.*)$/MENUSELECT_CHANNELS=\1 chan_motif/g' menuselect.makeopts
-%endif
-
-%if ! 0%{meetme}
-%{__perl} -pi -e 's/^MENUSELECT_APPS=(.*)$/MENUSELECT_APPS=\1 app_meetme/g' menuselect.makeopts
-%{__perl} -pi -e 's/^MENUSELECT_APPS=(.*)$/MENUSELECT_APPS=\1 app_page/g' menuselect.makeopts
-%endif
-
-%if ! 0%{ooh323}
-%{__perl} -pi -e 's/^MENUSELECT_ADDONS=(.*)$/MENUSELECT_ADDONS=\1 chan_ooh323/g' menuselect.makeopts
-%endif
 
 ## Options to include in the build
 %if 0%{ext_mp3}
-cat menuselect.makeopts
+#cat menuselect.makeopts
 contrib/scripts/get_mp3_source.sh
 %endif
 
-%if 0%{lib_nbs}
-svn export http://svn.digium.com/svn/nbs/trunk nbs-trunk
-%endif
 
 
 %build
 
-%if 0%{lib_nbs}
-pushd nbs-trunk
-make all install
-popd
-%endif
 
 export CFLAGS="%{optflags}"
 export CXXFLAGS="%{optflags}"
@@ -781,9 +706,6 @@ export FFLAGS="%{optflags}"
 export LDFLAGS="%{ldflags}"
 export ASTCFLAGS=" "
 
-%if 0%{?fedora}
-sed -i '1s/env python/python3/' contrib/scripts/refcounter.py
-%endif
 
 #aclocal -I autoconf --force
 #autoconf --force
@@ -796,7 +718,7 @@ popd
 
 
 echo "*******************************************************************************"
-cat menuselect.makeopts
+#cat menuselect.makeopts
 echo "*******************************************************************************"
 
 ## Generic configuration, assuming always above or equal centOS 7
@@ -814,9 +736,6 @@ rm apps/app_voicemail.o apps/app_directory.o
 mv apps/app_voicemail.so apps/app_voicemail_plain.so
 mv apps/app_directory.so apps/app_directory_plain.so
 
-# Now build with IMAP storage for voicemail and directory
-sed -i -e 's/^MENUSELECT_OPTS_app_voicemail=.*$/MENUSELECT_OPTS_app_voicemail=IMAP_STORAGE/' menuselect.makeopts
-
 echo "### Building with IMAP voicemail and directory"
 %make_build %{makeargs}
 
@@ -825,8 +744,6 @@ mv apps/app_voicemail.so apps/app_voicemail_imap.so
 mv apps/app_directory.so apps/app_directory_imap.so
 
 # Now build with ODBC storage for voicemail and directory
-
-sed -i -e 's/^MENUSELECT_OPTS_app_voicemail=.*$/MENUSELECT_OPTS_app_voicemail=ODBC_STORAGE/' menuselect.makeopts
 echo "### Building with ODBC voicemail and directory"
 %make_build %{makeargs}
 
@@ -838,11 +755,6 @@ mv apps/app_directory.so apps/app_directory_odbc.so
 touch apps/app_voicemail.o apps/app_directory.o
 touch apps/app_voicemail.so apps/app_directory.so
 
-sed -i -e 's/^MENUSELECT_RES=\(.*\)\bres_mwi_external\b\(.*\)$/MENUSELECT_RES=\1 \2/g' menuselect.makeopts
-sed -i -e 's/^MENUSELECT_RES=\(.*\)\bres_mwi_external_ami\b\(.*\)$/MENUSELECT_RES=\1 \2/g' menuselect.makeopts
-sed -i -e 's/^MENUSELECT_RES=\(.*\)\bres_stasis_mailbox\b\(.*\)$/MENUSELECT_RES=\1 \2/g' menuselect.makeopts
-sed -i -e 's/^MENUSELECT_RES=\(.*\)\bres_ari_mailboxes\b\(.*\)$/MENUSELECT_RES=\1 \2/g' menuselect.makeopts
-sed -i -e 's/^MENUSELECT_APP=\(.*\)$/MENUSELECT_RES=\1 app_voicemail/g' menuselect.makeopts
 
 %make_build %{makeargs}
 
@@ -856,20 +768,6 @@ find doc/api/html -type f -print0 | xargs --null touch -r ChangeLog
 %install
 rm -rf %{buildroot}
 
-%if 0%{lib_nbs}
-mkdir -p %{buildroot}/usr/{lib,bin,sbin,include}
-install -m 755 /usr/sbin/nbsd       %{buildroot}%{_sbindir}/nbsd
-install -m 755 /usr/bin/nbscat      %{buildroot}%{_bindir}/nbscat
-install -m 755 /usr/bin/nbscat8k    %{buildroot}%{_bindir}/nbscat8k
-install -m 755 /usr/lib/libnbs.so.1 %{buildroot}/usr/lib/libnbs.so.1
-pushd  %{buildroot}/usr/lib
-ln -sf libnbs.so.1 libnbs.so
-popd
-
-## Developmemt files, included any way
-install -m 755 /usr/lib/libnbs.a    %{buildroot}/usr/lib/libnbs.a
-install -m 644 /usr/include/nbs.h   %{buildroot}%{_includedir}/nbs.h
-%endif
 
 
 export CFLAGS="%{optflags}"
@@ -882,9 +780,21 @@ make install %{makeargs}
 make samples %{makeargs}
 
 ## START: Development asterisk, manually added
+if [ ! -d "%{buildroot}%{_includedir}" ]; then mkdir -p %{buildroot}%{_includedir}; fi
 install -m 644 include/asterisk.h   %{buildroot}%{_includedir}/asterisk.h
 cp      -rp    include/asterisk     %{buildroot}%{_includedir}
 ## END
+
+## START: Clean extra config
+rm -f %{buildroot}%{_sysconfdir}/asterisk/app_mysql.conf
+rm -f %{buildroot}%{_sysconfdir}/asterisk/cdr_mysql.conf
+rm -f %{buildroot}%{_sysconfdir}/asterisk/cdr_syslog.conf
+rm -f %{buildroot}%{_sysconfdir}/asterisk/muted.conf
+rm -f %{buildroot}%{_sysconfdir}/asterisk/oss.conf
+rm -f %{buildroot}%{_sysconfdir}/asterisk/sip.conf
+rm -f %{buildroot}%{_sysconfdir}/asterisk/sip_notify.conf
+## END
+
 
 install -D -p -m 0644 %{SOURCE5} %{buildroot}%{_unitdir}/asterisk.service
 rm -f %{buildroot}%{_sbindir}/safe_asterisk
@@ -1046,7 +956,6 @@ fi
 %dir %{_libdir}/asterisk
 %dir %{_libdir}/asterisk/modules
 %{_libdir}/asterisk/modules/app_agent_pool.so
-%{_libdir}/asterisk/modules/app_adsiprog.so
 %{_libdir}/asterisk/modules/app_alarmreceiver.so
 %{_libdir}/asterisk/modules/app_amd.so
 %{_libdir}/asterisk/modules/app_attended_transfer.so
@@ -1072,13 +981,9 @@ fi
 %{_libdir}/asterisk/modules/app_externalivr.so
 %{_libdir}/asterisk/modules/app_followme.so
 %{_libdir}/asterisk/modules/app_forkcdr.so
-%{_libdir}/asterisk/modules/app_getcpeid.so
-%{_libdir}/asterisk/modules/app_image.so
-%{_libdir}/asterisk/modules/app_macro.so
 %{_libdir}/asterisk/modules/app_milliwatt.so
 %{_libdir}/asterisk/modules/app_mixmonitor.so
 %{_libdir}/asterisk/modules/app_morsecode.so
-%{_libdir}/asterisk/modules/app_nbscat.so
 %{_libdir}/asterisk/modules/app_originate.so
 #%%{_libdir}/asterisk/modules/app_parkandannounce.so
 %{_libdir}/asterisk/modules/app_playback.so
@@ -1106,7 +1011,6 @@ fi
 %{_libdir}/asterisk/modules/app_talkdetect.so
 %{_libdir}/asterisk/modules/app_test.so
 %{_libdir}/asterisk/modules/app_transfer.so
-%{_libdir}/asterisk/modules/app_url.so
 %{_libdir}/asterisk/modules/app_userevent.so
 %{_libdir}/asterisk/modules/app_verbose.so
 %{_libdir}/asterisk/modules/app_waitforring.so
@@ -1123,11 +1027,9 @@ fi
 %{_libdir}/asterisk/modules/cdr_csv.so
 %{_libdir}/asterisk/modules/cdr_custom.so
 %{_libdir}/asterisk/modules/cdr_manager.so
-%{_libdir}/asterisk/modules/cdr_syslog.so
 %{_libdir}/asterisk/modules/cel_custom.so
 %{_libdir}/asterisk/modules/cel_manager.so
 %{_libdir}/asterisk/modules/chan_bridge_media.so
-#%%{_libdir}/asterisk/modules/chan_multicast_rtp.so
 %{_libdir}/asterisk/modules/chan_rtp.so
 %{_libdir}/asterisk/modules/codec_adpcm.so
 %{_libdir}/asterisk/modules/codec_alaw.so
@@ -1148,7 +1050,6 @@ fi
 %{_libdir}/asterisk/modules/format_h263.so
 %{_libdir}/asterisk/modules/format_h264.so
 %{_libdir}/asterisk/modules/format_ilbc.so
-#%%{_libdir}/asterisk/modules/format_jpeg.so
 %{_libdir}/asterisk/modules/format_ogg_speex.so
 %{_libdir}/asterisk/modules/format_ogg_vorbis.so
 %{_libdir}/asterisk/modules/format_pcm.so
@@ -1210,7 +1111,6 @@ fi
 %{_libdir}/asterisk/modules/pbx_loopback.so
 %{_libdir}/asterisk/modules/pbx_realtime.so
 %{_libdir}/asterisk/modules/pbx_spool.so
-%{_libdir}/asterisk/modules/res_adsi.so
 %{_libdir}/asterisk/modules/res_agi.so
 %{_libdir}/asterisk/modules/res_ari.so
 %{_libdir}/asterisk/modules/res_ari_applications.so
@@ -1249,7 +1149,6 @@ fi
 %{_libdir}/asterisk/modules/res_limit.so
 %{_libdir}/asterisk/modules/res_manager_devicestate.so
 %{_libdir}/asterisk/modules/res_manager_presencestate.so
-%{_libdir}/asterisk/modules/res_monitor.so
 %{_libdir}/asterisk/modules/res_musiconhold.so
 %{_libdir}/asterisk/modules/res_mutestream.so
 %{_libdir}/asterisk/modules/res_mwi_devstate.so
@@ -1282,34 +1181,33 @@ fi
 %{_libdir}/asterisk/modules/res_timing_pthread.so
 %{_libdir}/asterisk/modules/res_timing_timerfd.so
 
-## added to asterisk 18
+## MANUAL: added to asterisk 18
 %{_libdir}/asterisk/modules/app_audiosocket.so
 %{_libdir}/asterisk/modules/chan_audiosocket.so
+%{_libdir}/asterisk/modules/app_mp3.so
 %{_libdir}/asterisk/modules/res_audiosocket.so
 %{_libdir}/asterisk/modules/res_pjsip_stir_shaken.so
 %{_libdir}/asterisk/modules/res_stir_shaken.so
-
+%{_libdir}/asterisk/modules/res_prometheus.so
+%{_libdir}/asterisk/modules/res_resolver_unbound.so
+%{_libdir}/asterisk/modules/format_mp3.so
 
 %{_sbindir}/astcanary
 %{_sbindir}/astdb2sqlite3
 %{_sbindir}/asterisk
 %{_sbindir}/astgenkey
-%{_sbindir}/astman
 %{_sbindir}/astversion
 %{_sbindir}/autosupport
-#%%{_sbindir}/check_expr
-#%%{_sbindir}/check_expr2
-%{_sbindir}/muted
 %{_sbindir}/rasterisk
-#%%{_sbindir}/refcounter
 %{_sbindir}/smsq
 %{_sbindir}/stereorize
 %{_sbindir}/streamplayer
+%{_sbindir}/astdb2bdb
+
 
 ## Extra binaries
 %{_sbindir}/check_expr
 %{_sbindir}/check_expr2
-%{_sbindir}/conf2ael
 
 %{_mandir}/man8/astdb2bdb.8*
 %{_mandir}/man8/astdb2sqlite3.8*
@@ -1334,7 +1232,6 @@ fi
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/cdr_beanstalkd.conf
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/cdr_custom.conf
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/cdr_manager.conf
-%attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/cdr_syslog.conf
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/cel.conf
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/cel_beanstalkd.conf
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/cel_custom.conf
@@ -1357,7 +1254,6 @@ fi
 %attr(0600,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/manager.conf
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/modules.conf
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/musiconhold.conf
-%attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/muted.conf
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/osp.conf
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/phoneprov.conf
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/queuerules.conf
@@ -1406,14 +1302,6 @@ fi
 %attr(0750,asterisk,asterisk) %dir %{_localstatedir}/spool/asterisk/uploads
 %attr(0750,asterisk,asterisk) %dir %{_localstatedir}/spool/asterisk/voicemail
 
-%if 0%{lib_nbs}
-%{_sbindir}/nbsd
-%{_bindir}/nbscat
-%{_bindir}/nbscat8k
-/usr/lib/libnbs.so
-/usr/lib/libnbs.so.1
-%{_libdir}/asterisk/modules/chan_nbs.so
-%endif
 
 %if %{tmpfilesd}
 %attr(0644,root,root) /usr/lib/tmpfiles.d/asterisk.conf
@@ -1424,8 +1312,6 @@ fi
 
 %files ael
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/extensions.ael
-%{_sbindir}/aelparse
-#%%{_sbindir}/conf2ael
 %{_libdir}/asterisk/modules/pbx_ael.so
 %{_libdir}/asterisk/modules/res_ael_share.so
 
@@ -1471,7 +1357,6 @@ fi
 %{_libdir}/asterisk/modules/app_meetme.so
 %{_libdir}/asterisk/modules/app_page.so
 %endif
-%{_libdir}/asterisk/modules/app_dahdiras.so
 %{_libdir}/asterisk/modules/chan_dahdi.so
 %{_libdir}/asterisk/modules/codec_dahdi.so
 %{_libdir}/asterisk/modules/res_timing_dahdi.so
@@ -1482,10 +1367,7 @@ fi
 %{_includedir}/asterisk.h
 %dir %{_includedir}/asterisk
 %{_includedir}/asterisk
-%if 0%{lib_nbs}
-/usr/lib/libnbs.a
-%{_includedir}/nbs.h
-%endif
+
 
 %files fax
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/res_fax.conf
@@ -1509,10 +1391,6 @@ fi
 %{_libdir}/asterisk/modules/res_hep.so
 %{_libdir}/asterisk/modules/res_hep_rtcp.so
 %{_libdir}/asterisk/modules/res_hep_pjsip.so
-
-%files ices
-%doc contrib/asterisk-ices.xml
-%{_libdir}/asterisk/modules/app_ices.so
 
 %if 0%{?jack}
 %files jack
@@ -1553,12 +1431,8 @@ fi
 
 %if 0%{mysql}
 %files mysql
-%attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/app_mysql.conf
-%attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/cdr_mysql.conf
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/res_config_mysql.conf
 %doc contrib/realtime/mysql/*.sql
-%{_libdir}/asterisk/modules/app_mysql.so
-%{_libdir}/asterisk/modules/cdr_mysql.so
 %{_libdir}/asterisk/modules/res_config_mysql.so
 %endif
 
@@ -1588,10 +1462,6 @@ fi
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/ooh323.conf
 %{_libdir}/asterisk/modules/chan_ooh323.so
 %endif
-
-%files oss
-%attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/oss.conf
-%{_libdir}/asterisk/modules/chan_oss.so
 
 %if 0%{phone}
 %files phone
@@ -1676,11 +1546,6 @@ fi
 %{_libdir}/asterisk/modules/cel_radius.so
 %endif
 
-%files sip
-%attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/sip.conf
-%attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/sip_notify.conf
-%{_libdir}/asterisk/modules/chan_sip.so
-
 %files skinny
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/skinny.conf
 %{_libdir}/asterisk/modules/chan_skinny.so
@@ -1743,6 +1608,8 @@ fi
 %changelog
 * Thu Oct 13 2020 Francisco Correia <fcorreia@users.noreply.github.com> - 18.0.0-rc1
 - Packaging for the latest 16 LTS version
+- Remove depracated packages
+- static cconfiguration
 
 * Thu Sep 18 2020 Francisco Correia <fcorreia@users.noreply.github.com> - 16.13.0
 - Packaging for the latest 16 LTS version
