@@ -2,7 +2,7 @@
 ##
 %define _user       asterisk
 %define _group      asterisk
-
+%define _rc         1
 
 %global           pjsip_version   2.9
 %global           jansson_version 2.12
@@ -61,7 +61,7 @@
 
 Summary:	Asterisk, The Open Source PBX
 Name:		asterisk
-Version:    16.13.0
+Version:    18.0.0
 Release:    %{rpm_release}.%{disttype}%{distnum}
 License:	GPL v2
 Group:		Applications/System
@@ -881,6 +881,11 @@ export ASTCFLAGS="%{optflags}"
 make install %{makeargs}
 make samples %{makeargs}
 
+## START: Development asterisk, manually added
+install -m 644 include/asterisk.h   %{buildroot}%{_includedir}/asterisk.h
+cp      -rp    include/asterisk     %{buildroot}%{_includedir}
+## END
+
 install -D -p -m 0644 %{SOURCE5} %{buildroot}%{_unitdir}/asterisk.service
 rm -f %{buildroot}%{_sbindir}/safe_asterisk
 install -D -p -m 0644 %{S:2} %{buildroot}%{_sysconfdir}/logrotate.d/asterisk
@@ -1277,6 +1282,14 @@ fi
 %{_libdir}/asterisk/modules/res_timing_pthread.so
 %{_libdir}/asterisk/modules/res_timing_timerfd.so
 
+## added to asterisk 18
+%{_libdir}/asterisk/modules/app_audiosocket.so
+%{_libdir}/asterisk/modules/chan_audiosocket.so
+%{_libdir}/asterisk/modules/res_audiosocket.so
+%{_libdir}/asterisk/modules/res_pjsip_stir_shaken.so
+%{_libdir}/asterisk/modules/res_stir_shaken.so
+
+
 %{_sbindir}/astcanary
 %{_sbindir}/astdb2sqlite3
 %{_sbindir}/asterisk
@@ -1304,6 +1317,7 @@ fi
 %{_mandir}/man8/astgenkey.8*
 %{_mandir}/man8/autosupport.8*
 %{_mandir}/man8/safe_asterisk.8*
+
 
 %attr(0750,asterisk,asterisk) %dir %{_sysconfdir}/asterisk
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/acl.conf
@@ -1362,6 +1376,9 @@ fi
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/udptl.conf
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/users.conf
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/vpb.conf
+
+%attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/prometheus.conf
+%attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/stir_shaken.conf
 
 %config(noreplace) %{_sysconfdir}/logrotate.d/asterisk
 
@@ -1724,6 +1741,9 @@ fi
 %endif
 
 %changelog
+* Thu Oct 13 2020 Francisco Correia <fcorreia@users.noreply.github.com> - 18.0.0-rc1
+- Packaging for the latest 16 LTS version
+
 * Thu Sep 18 2020 Francisco Correia <fcorreia@users.noreply.github.com> - 16.13.0
 - Packaging for the latest 16 LTS version
 
