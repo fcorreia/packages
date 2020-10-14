@@ -1,0 +1,16 @@
+[Unit]
+Description=Prometheus Node Exporter.
+Documentation=https://github.com/prometheus/node_exporter
+After=network.target
+
+[Service]
+EnvironmentFile=-/etc/default/prometheus-node-exporter
+User=prometheus-exporter
+Group=prometheus
+ExecStart=/opt/prometheus/bin/node_exporter $NODE_EXPORTER_OPTS
+StandardOutput=journal
+StandardError=journal
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

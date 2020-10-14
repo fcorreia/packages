@@ -1,0 +1,16 @@
+[Unit]
+Description=Prometheus Consul Exporter
+Documentation=https://github.com/prometheus/consul_exporter
+After=network.target
+
+[Service]
+EnvironmentFile=-/etc/default/prometheus-consul-exporter
+User=prometheus-exporter
+Group=prometheus
+ExecStart=/opt/prometheus/bin/consul_exporter $CONSUL_EXPORTER_OPTS
+StandardOutput=journal
+StandardError=journal
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

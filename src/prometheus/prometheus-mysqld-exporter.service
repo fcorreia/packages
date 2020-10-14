@@ -1,0 +1,16 @@
+[Unit]
+Description=Prometheus MySQL Server Exporter
+Documentation=https://github.com/prometheus/mysqld_exporter
+After=network.target
+
+[Service]
+EnvironmentFile=-/etc/default/prometheus-mysqld-exporter
+User=prometheus-exporter
+Group=prometheus
+ExecStart=/opt/prometheus/bin/mysqld_exporter $MYSQLD_EXPORTER_OPTS
+StandardOutput=journal
+StandardError=journal
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

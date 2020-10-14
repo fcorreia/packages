@@ -1,0 +1,16 @@
+[Unit]
+Description=Prometheus Kafka Exporter
+Documentation=https://github.com/danielqsj/kafka_exporter
+After=network.target
+
+[Service]
+EnvironmentFile=-/etc/default/prometheus-kafka-exporter
+User=prometheus-exporter
+Group=prometheus
+ExecStart=/opt/prometheus/bin/kafka_exporter $KAFKA_EXPORTER_OPTS
+StandardOutput=journal
+StandardError=journal
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

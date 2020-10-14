@@ -1,0 +1,9 @@
+prometheus:2.21.0
+prometheus-alertmanager:0.21.0
+prometheus-consul-exporter:0.7.1
+prometheus-kafka-exporter:1.2.0
+prometheus-mysqld-exporter:0.12.1
+prometheus-node-exporter:1.0.1
+prometheus-postgres-exporter:0.8.0
+prometheus-pushgateway:1.3.0
+prometheus-redis-exporter:1.12.0

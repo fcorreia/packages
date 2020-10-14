@@ -1,0 +1,16 @@
+[Unit]
+Description=PostgresSQL metric exporter for Prometheus
+Documentation=https://github.com/wrouesnel/postgres_exporter
+After=network.target
+
+[Service]
+EnvironmentFile=-/etc/default/prometheus-postgres-exporter
+User=prometheus-exporter
+Group=prometheus
+ExecStart=/opt/prometheus/bin/postgres_exporter $POSTGRES_EXPORTER_OPTS
+StandardOutput=journal
+StandardError=journal
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

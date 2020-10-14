@@ -1,0 +1,4 @@
+##
+## Default variable to add arguments to service
+## NODE_EXPORTER_OPTS='^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)'
+##

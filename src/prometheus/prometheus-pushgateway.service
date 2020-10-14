@@ -1,0 +1,17 @@
+[Unit]
+Description=Prometheus Pushgateway.
+Documentation=https://github.com/prometheus/pushgateway
+After=network.target
+
+[Service]
+EnvironmentFile=-/etc/default/prometheus-pushgateway
+User=pushgateway
+Group=prometheus
+WorkingDirectory=/var/lib/prometheus/pushgateway
+ExecStart=/opt/prometheus/bin/pushgateway $PUSHGATEWAY_OPTS
+StandardOutput=journal
+StandardError=journal
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

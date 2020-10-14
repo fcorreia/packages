@@ -1,0 +1,18 @@
+[Unit]
+Description=Prometheus monitoring system
+Documentation=https://prometheus.io
+After=network.target
+
+[Service]
+EnvironmentFile=-/etc/default/prometheus
+User=prometheus
+Group=prometheus
+WorkingDirectory=/var/lib/prometheus
+ExecStart=/opt/prometheus/bin/prometheus $PROMETHEUS_OPTS
+ExecReload=/bin/kill -HUP $MAINPID
+StandardOutput=journal
+StandardError=journal
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

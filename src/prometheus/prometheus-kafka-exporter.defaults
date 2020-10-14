@@ -1,0 +1,3 @@
+##
+## Default variable to add arguments to service
+KAFKA_EXPORTER_OPTS=''

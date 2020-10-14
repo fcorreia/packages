@@ -1,0 +1,16 @@
+[Unit]
+Description=Prometheus Redis Exporter
+Documentation=https://github.com/oliver006/redis_exporter
+After=network.target
+
+[Service]
+EnvironmentFile=-/etc/default/prometheus-redis-exporter
+User=prometheus-exporter
+Group=prometheus
+ExecStart=/opt/prometheus/bin/redis_exporter $REDIS_EXPORTER_OPTS
+StandardOutput=journal
+StandardError=journal
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

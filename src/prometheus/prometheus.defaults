@@ -1,0 +1,1 @@
+PROMETHEUS_OPTS='--config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/var/lib/prometheus/data --web.console.libraries=/opt/prometheus/console_libraries --web.console.templates=/opt/prometheus/consoles'
