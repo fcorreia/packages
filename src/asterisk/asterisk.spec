@@ -2,7 +2,7 @@
 ##
 %define _user       asterisk
 %define _group      asterisk
-%define _rc         1
+%define _rc         2
 
 %global           pjsip_version   2.9
 %global           jansson_version 2.12
@@ -61,7 +61,7 @@
 Summary:	Asterisk, The Open Source PBX
 Name:		asterisk
 Version:    18.0.0
-Release:    %{rpm_release}.%{disttype}%{distnum}
+Release:    %{?_rc:rc%{_rc}.}%{rpm_release}.%{disttype}%{distnum}
 License:	GPL v2
 Group:		Applications/System
 URL:		http://www.asterisk.org/
@@ -1606,8 +1606,12 @@ fi
 %endif
 
 %changelog
+* Fri Oct 16 2020 Francisco Correia <fcorreia@users.noreply.github.com> - 18.0.0-rc2
+- Packaging for the latest 18 LTS version, Release candidate 2
+- https://downloads.asterisk.org/pub/telephony/asterisk/ChangeLog-18.0.0-rc2
+
 * Thu Oct 13 2020 Francisco Correia <fcorreia@users.noreply.github.com> - 18.0.0-rc1
-- Packaging for the latest 16 LTS version
+- Packaging for the latest 18 LTS version
 - Remove depracated packages
 - static cconfiguration
 
