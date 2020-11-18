@@ -9,7 +9,7 @@
 ##
 ##
 %define name        redis
-%define version     6.0.5
+%define version     6.0.9
 %define release     %{rpm_release}.%{disttype}%{distnum}
 %define home_dir    %{_sharedstatedir}/%{name}
 %define work_dir    %{_sharedstatedir}/%{name}
@@ -138,5 +138,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Nov 18 2020 Francisco Correia <fcorreia@users.noreply.github.com> - 6.0.9-1
+- Upgrade Version
+
 * Fri Jun 19 2020 Francisco Correia <fcorreia@users.noreply.github.com> - 6.0.5-1
 - Initial package
