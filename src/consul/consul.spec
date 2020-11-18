@@ -9,7 +9,7 @@
 ##
 ##
 %define name        consul
-%define version     1.7.2
+%define version     1.8.5
 %define release     %{rpm_release}.%{disttype}%{distnum}
 %define home_dir    /opt/%{name}
 %define work_dir    %{_sharedstatedir}/%{name}
@@ -117,5 +117,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Nov 18 2020 Francisco Correia <fcorreia@users.noreply.github.com> - 1.8.5-1
+- Upgrade Version
+
 * Mon Apr 27 2020 Francisco Correia <fcorreia@users.noreply.github.com> - 1.7.2-1
 - Initial package
