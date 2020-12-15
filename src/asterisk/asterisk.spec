@@ -2,7 +2,7 @@
 ##
 %define _user       asterisk
 %define _group      asterisk
-%define _rc         2
+#define _rc         2
 
 %global           pjsip_version   2.9
 %global           jansson_version 2.12
@@ -60,15 +60,16 @@
 
 Summary:	Asterisk, The Open Source PBX
 Name:		asterisk
-Version:    18.0.0
+Version:    18.1.0
 Release:    %{?_rc:rc%{_rc}.}%{rpm_release}.%{disttype}%{distnum}
 License:	GPL v2
 Group:		Applications/System
 URL:		http://www.asterisk.org/
 
-
-Source0:          http://downloads.asterisk.org/pub/telephony/asterisk/releases/asterisk-%{version}%{?_rc:-rc%{_rc}}%{?_beta:-beta%{_beta}}.tar.gz
-Source1:          http://downloads.asterisk.org/pub/telephony/asterisk/releases/asterisk-%{version}%{?_rc:-rc%{_rc}}%{?_beta:-beta%{_beta}}.tar.gz.asc
+Source0:          http://downloads.asterisk.org/pub/telephony/asterisk/asterisk-18-current.tar.gz
+Source1:          http://downloads.asterisk.org/pub/telephony/asterisk/asterisk-18-current.tar.gz.asc
+#Source0:          http://downloads.asterisk.org/pub/telephony/asterisk/releases/asterisk-%{version}%{?_rc:-rc%{_rc}}%{?_beta:-beta%{_beta}}.tar.gz
+#Source1:          http://downloads.asterisk.org/pub/telephony/asterisk/releases/asterisk-%{version}%{?_rc:-rc%{_rc}}%{?_beta:-beta%{_beta}}.tar.gz.asc
 Source2:          asterisk-logrotate
 Source3:          menuselect.makedeps
 Source4:          menuselect.makeopts
@@ -1606,6 +1607,10 @@ fi
 %endif
 
 %changelog
+* Tue Dec 16 2020 Francisco Correia <fcorreia@users.noreply.github.com> - 18.1.0
+- Packaging for the latest 18 LTS version
+- https://downloads.asterisk.org/pub/telephony/asterisk/ChangeLog-18.1.0
+
 * Fri Oct 16 2020 Francisco Correia <fcorreia@users.noreply.github.com> - 18.0.0-rc2
 - Packaging for the latest 18 LTS version, Release candidate 2
 - https://downloads.asterisk.org/pub/telephony/asterisk/ChangeLog-18.0.0-rc2
