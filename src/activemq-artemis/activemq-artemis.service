@@ -1,0 +1,21 @@
+[Unit]
+Description=Apache ActiveMQ Artemis
+Documentation=https://activemq.apache.org/artemis/docs/latest/index.html
+After=network-online.target
+Wants=network-online.target
+
+
+[Service]
+Type=simple
+User=artemis
+Group=artemis
+WorkingDirectory=/var/lib/activemq-artemis
+ExecStart=/var/lib/activemq-artemis/bin/artemis run
+ExecStop=/var/lib/activemq-artemis/bin/artemis stop
+Restart=always
+TimeoutStopSec=30
+## stdout is not used
+StandardOutput=null
+
+[Install]
+WantedBy=multi-user.target
