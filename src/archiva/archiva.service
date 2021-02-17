@@ -1,0 +1,23 @@
+##
+##
+##
+[Unit]
+Description=Apache Archiva
+Documentation=https://archiva.apache.org
+After=network.target
+Wants=network-online.target
+
+[Service]
+Type=forking
+User=archiva
+Group=archiva
+EnvironmentFile=/etc/sysconfig/archiva
+WorkingDirectory=/var/lib/archiva
+ExecStart=/opt/archiva/bin/archiva start
+ExecStop=/opt/archiva/bin/archiva stop
+TimeoutStopSec=120
+Restart=always
+RestartSec=60s
+
+[Install]
+WantedBy=multi-user.target
