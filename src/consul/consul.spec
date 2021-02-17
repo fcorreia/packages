@@ -9,7 +9,7 @@
 ##
 ##
 %define name        consul
-%define version     1.8.5
+%define version     1.9.3
 %define release     %{rpm_release}.%{disttype}%{distnum}
 %define home_dir    /opt/%{name}
 %define work_dir    %{_sharedstatedir}/%{name}
@@ -35,9 +35,9 @@ Group:              System Environment/Daemons
 License:            Mozilla Public License, version 2.0
 URL:                https://www.consul.io/
 Source0:            https://releases.hashicorp.com/consul/%{version}/consul_%{version}_%{_os}_%{consul_arch}.zip
-Source1:            consul.service
-Source2:            consul.sysconfig
-Source3:            consul_%{version}_SHA256SUMS
+Source1:            https://releases.hashicorp.com/consul/%{version}/consul_%{version}_SHA256SUMS
+Source2:            consul.service
+Source3:            consul.sysconfig
 
 BuildRequires:      systemd tar gzip
 
@@ -67,7 +67,7 @@ Consul provides several key features:
 %build
 echo "Using pre-compiled Binaries"
 pushd %{_sourcedir}
-grep $(basename %{SOURCE0})  %{SOURCE3} | sha256sum -c
+grep $(basename %{SOURCE0})  %{SOURCE1} | sha256sum -c
 popd
 
 %install
@@ -79,8 +79,8 @@ mkdir -vp %{buildroot}%{conf_dir}
 ## consul binary
 %{__install} -p -D -m 0755 consul %{buildroot}%{_sbindir}/consul
 
-install -D  %{SOURCE1}     %{buildroot}/%{_unitdir}/%{name}.service
-install -D  %{SOURCE2}     %{buildroot}/%{_sysconfdir}/sysconfig/%{name}
+install -D  %{SOURCE2}     %{buildroot}/%{_unitdir}/%{name}.service
+install -D  %{SOURCE3}     %{buildroot}/%{_sysconfdir}/sysconfig/%{name}
 
 
 %pre
@@ -117,6 +117,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Feb 17 2021 Francisco Correia <fcorreia@users.noreply.github.com> - 1.9.3-1
+- Upgrade Version
+
 * Wed Nov 18 2020 Francisco Correia <fcorreia@users.noreply.github.com> - 1.8.5-1
 - Upgrade Version
 
