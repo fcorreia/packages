@@ -1,25 +1,16 @@
 %global shortname srtp
 
 Name:		libsrtp
-Version:	1.5.4
+Version:	1.6.0
 Release:    %{rpm_release}.%{disttype}%{distnum}
 Summary:	An implementation of the Secure Real-time Transport Protocol (SRTP)
 License:	BSD
 URL:		https://github.com/cisco/libsrtp
 Source0:	https://github.com/cisco/libsrtp/archive/v%{version}.tar.gz
-# Universal config.h
-Source2:	config.h
-BuildRequires:	gcc
-BuildRequires:  libusb-devel
-BuildRequires:  newt-devel
-BuildRequires:  perl-generators
-BuildRequires:  chrpath
+Source1:	sources.md5sum
 
-# Fix shared lib so ldconfig doesn't complain
-Patch0:		libsrtp-1.5.4-shared-fix.patch
-Patch1:		libsrtp-srtp_aes_encrypt.patch
-Patch2:		libsrtp-sha1-name-fix.patch
-Patch3:		libsrtp-fix-name-collision-on-MIPS.patch
+BuildRequires:	gcc
+BuildRequires:  openssl-devel
 
 %description
 This package provides an implementation of the Secure Real-time
@@ -36,30 +27,23 @@ The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
 %prep
-%setup -q -n %{name}-%{version}
-%patch0 -p1 -b .sharedfix
-%patch1 -p1 -b .srtp_aes_encrypt
-%patch2 -p1 -b .sha1-name-fix
-%patch3 -p1 -b .mips-name-fix
+pushd %{_sourcedir}
+grep $(basename %{SOURCE0})  %{SOURCE1} | md5sum -c
+popd
 
-%if 0%{?rhel} > 0
-%ifarch ppc64
-sed -i 's/-z noexecstack//' Makefile.in
-%endif
-%endif
+%setup -q -n %{name}-%{version}
+
 
 %build
 export CFLAGS="%{optflags} -fPIC"
-%configure
+%configure --enable-openssl
+make %{?_smp_mflags}
 make %{?_smp_mflags} shared_library
+make runtest
 
 %install
 make install DESTDIR=%{buildroot}
 find %{buildroot} -name '*.la' -exec rm -f {} ';'
-
-# Handle multilib issues with config.h
-mv %{buildroot}%{_includedir}/%{shortname}/config.h %{buildroot}%{_includedir}/%{shortname}/config-%{__isa_bits}.h
-cp -a %{SOURCE2} %{buildroot}%{_includedir}/%{shortname}/config.h
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -68,13 +52,17 @@ cp -a %{SOURCE2} %{buildroot}%{_includedir}/%{shortname}/config.h
 %license LICENSE
 %doc CHANGES README TODO VERSION doc/*.txt doc/*.pdf
 %{_libdir}/*.so.*
+%{_libdir}/*.so
+%{_libdir}/*.a
 
 %files devel
 %{_includedir}/%{shortname}/
 %{_libdir}/pkgconfig/libsrtp.pc
-%{_libdir}/*.so
 
 %changelog
+* Thu Apr 16 2020 Francisco Correia <fcorreia@users.noreply.github.com> - 1.6.0
+- Bump version
+
 * Thu Apr 16 2020 Francisco Correia <fcorreia@users.noreply.github.com> - 1.5.4
 - Initial Spec file from Fedora project: https://src.fedoraproject.org/rpms/libsrtp.git
 
