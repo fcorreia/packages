@@ -1,0 +1,29 @@
+--- t/redis-6.2.1/redis.conf	2021-03-02 06:14:39.000000000 +0000
++++ redis.conf	2021-03-03 22:49:08.441814719 +0000
+@@ -276,7 +276,7 @@ daemonize no
+ #
+ # Note that on modern Linux systems "/run/redis.pid" is more conforming
+ # and should be used instead.
+-pidfile /var/run/redis_6379.pid
++pidfile /var/run/redis/redis.pid
+ 
+ # Specify the server verbosity level.
+ # This can be one of:
+@@ -289,7 +289,7 @@ loglevel notice
+ # Specify the log file name. Also the empty string can be used to force
+ # Redis to log on the standard output. Note that if you use standard
+ # output for logging but daemonize, logs will be sent to /dev/null
+-logfile ""
++logfile /var/log/redis/redis.log
+ 
+ # To enable logging to the system logger, just set 'syslog-enabled' to yes,
+ # and optionally update the other syslog parameters to suit your needs.
+@@ -441,7 +441,7 @@ rdb-del-sync-files no
+ # The Append Only File will also be created inside this directory.
+ #
+ # Note that you must specify a directory here, not a file name.
+-dir ./
++dir /var/lib/redis/
+ 
+ ################################# REPLICATION #################################
+ 

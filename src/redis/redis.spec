@@ -6,7 +6,7 @@
 ##
 ##
 %define name        redis
-%define version     6.0.12
+%define version     6.2.1
 %define release     %{rpm_release}.%{disttype}%{distnum}
 %define home_dir    %{_sharedstatedir}/%{name}
 %define work_dir    %{_sharedstatedir}/%{name}
@@ -33,7 +33,7 @@ Source1:            redis.service
 Source2:            redis.sysconfig
 Source3:            redis.SHA256SUM
 
-Patch0:             redis.conf.patch
+Patch0:             redis-6.2.conf.patch
 BuildRequires:      systemd tar gzip
 
 %if 0%{?tls_support}
@@ -135,6 +135,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar 03 2021 Francisco Correia <fcorreia@users.noreply.github.com> - 6.2.1-1
+- Upgrade Version
+
 * Wed Mar 03 2021 Francisco Correia <fcorreia@users.noreply.github.com> - 6.0.12-1
 - Upgrade Version
 
