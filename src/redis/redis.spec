@@ -2,14 +2,11 @@
 %define debug_package   %{nil}
 %define __jar_repack    %{nil}
 
-%define distnum %{expand:%%(/usr/lib/rpm/redhat/dist.sh --distnum)}
-%define disttype %{expand:%%(/usr/lib/rpm/redhat/dist.sh --disttype)}
-
 ##
 ##
 ##
 %define name        redis
-%define version     6.0.9
+%define version     6.0.12
 %define release     %{rpm_release}.%{disttype}%{distnum}
 %define home_dir    %{_sharedstatedir}/%{name}
 %define work_dir    %{_sharedstatedir}/%{name}
@@ -138,6 +135,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar 03 2021 Francisco Correia <fcorreia@users.noreply.github.com> - 6.0.12-1
+- Upgrade Version
+
 * Wed Nov 18 2020 Francisco Correia <fcorreia@users.noreply.github.com> - 6.0.9-1
 - Upgrade Version
 

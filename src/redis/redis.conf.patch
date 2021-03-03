@@ -1,21 +1,12 @@
---- redis.conf.orig	2020-11-18 16:53:00.296247800 +0000
-+++ redis.conf	2020-11-18 16:53:57.200696491 +0000
-@@ -233,7 +233,7 @@ daemonize no
- #                        UPSTART_JOB or NOTIFY_SOCKET environment variables
- # Note: these supervision methods only signal "process is ready."
- #       They do not enable continuous pings back to your supervisor.
--supervised no
-+supervised systemd
-
- # If a pid file is specified, Redis writes it where specified at startup
- # and removes it at exit.
+--- redis.conf.original	2021-03-03 22:20:29.323205934 +0000
++++ redis.conf	2021-03-03 22:22:55.273728945 +0000
 @@ -244,7 +244,7 @@ supervised no
  #
  # Creating a pid file is best effort: if Redis is not able to create it
  # nothing bad happens, the server will start and run normally.
 -pidfile /var/run/redis_6379.pid
 +pidfile /var/run/redis/redis.pid
-
+ 
  # Specify the server verbosity level.
  # This can be one of:
 @@ -257,7 +257,7 @@ loglevel notice
@@ -24,7 +15,7 @@
  # output for logging but daemonize, logs will be sent to /dev/null
 -logfile ""
 +logfile /var/log/redis/redis.log
-
+ 
  # To enable logging to the system logger, just set 'syslog-enabled' to yes,
  # and optionally update the other syslog parameters to suit your needs.
 @@ -362,7 +362,7 @@ rdb-del-sync-files no
@@ -33,5 +24,6 @@
  # Note that you must specify a directory here, not a file name.
 -dir ./
 +dir /var/lib/redis/
-
+ 
  ################################# REPLICATION #################################
+ 
