@@ -9,7 +9,7 @@
 ##
 ##
 %define name        consul
-%define version     1.9.3
+%define version     1.9.13
 %define release     %{rpm_release}.%{disttype}%{distnum}
 %define home_dir    /opt/%{name}
 %define work_dir    %{_sharedstatedir}/%{name}
@@ -117,6 +117,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan 06 2022 Francisco Correia <fcorreia@users.noreply.github.com> - 1.9.13-1
+- Upgrade Version
+
 * Wed Feb 17 2021 Francisco Correia <fcorreia@users.noreply.github.com> - 1.9.3-1
 - Upgrade Version
 
