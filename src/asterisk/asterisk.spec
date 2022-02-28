@@ -27,49 +27,39 @@
 
 %global           tmpfilesd        1
 
-## Build individual packages for the following group
-%global           apidoc     0
+# Build individual packages for the following group
+%global           apidoc     1
 %global           mysql      1
 %global           odbc       1
 %global           postgresql 1
 %global           radius     1
 %global           snmp       1
-%global           misdn      0
+%global           misdn      1
 %global           ldap       1
 %global           gmime      1
 %global           corosync   1
-%if 0%{?fedora} >= 21 || 0%{?rhel} >=7
-%global           jack       0
-%else
 %global           jack       1
-%endif
-%if 0%{?fedora} >= 28 || 0%{?rhel} >= 7
-%global           phone      0
-%global           xmpp       0
-%else
 %global           phone      1
 %global           xmpp       1
-%endif
 %global           meetme     1
 %global           ooh323     1
+%global           legacy     1
 
 
-## Building options, things to include in the package
+# Building options, things to include in the package
 %global           ext_mp3    1
 
 
 Summary:	Asterisk, The Open Source PBX
 Name:		asterisk
-Version:    18.1.0
+Version:    18.10.0
 Release:    %{?_rc:rc%{_rc}.}%{rpm_release}.%{disttype}%{distnum}
 License:	GPL v2
 Group:		Applications/System
 URL:		http://www.asterisk.org/
 
-Source0:          http://downloads.asterisk.org/pub/telephony/asterisk/asterisk-18-current.tar.gz
-Source1:          http://downloads.asterisk.org/pub/telephony/asterisk/asterisk-18-current.tar.gz.asc
-#Source0:          http://downloads.asterisk.org/pub/telephony/asterisk/releases/asterisk-%{version}%{?_rc:-rc%{_rc}}%{?_beta:-beta%{_beta}}.tar.gz
-#Source1:          http://downloads.asterisk.org/pub/telephony/asterisk/releases/asterisk-%{version}%{?_rc:-rc%{_rc}}%{?_beta:-beta%{_beta}}.tar.gz.asc
+Source0:          http://downloads.asterisk.org/pub/telephony/asterisk/releases/asterisk-%{version}%{?_rc:-rc%{_rc}}%{?_beta:-beta%{_beta}}.tar.gz
+Source1:          http://downloads.asterisk.org/pub/telephony/asterisk/releases/asterisk-%{version}%{?_rc:-rc%{_rc}}%{?_beta:-beta%{_beta}}.tar.gz.asc
 Source2:          asterisk-logrotate
 Source3:          menuselect.makedeps
 Source4:          menuselect.makeopts
@@ -117,6 +107,7 @@ BuildRequires:    automake
 BuildRequires:    gcc
 BuildRequires:    gcc-c++
 BuildRequires:    perl
+BuildRequires:    svn
 
 # Essential Libraries
 BuildRequires:  jansson-devel
@@ -126,6 +117,9 @@ BuildRequires:  libxslt-devel
 BuildRequires:  ncurses-devel
 BuildRequires:  openssl-devel
 BuildRequires:  uuid-devel
+
+# Other Libraries
+BuildRequires:  unbound-devel
 
 # core build requirements
 BuildRequires:    openssl-devel
@@ -269,7 +263,7 @@ Requires: openssl
 Requires: uuid
 
 # Core Libraries
-## libsrtp >= 1.5.4
+# libsrtp >= 1.5.4
 Requires: libsrtp >= 1.5.4
 Requires: sqlite >= 3
 
@@ -422,6 +416,13 @@ Requires: asterisk = %{version}-%{release}
 JACK resources for Asterisk.
 %endif
 
+%package legacy
+Summary: Asterisk Legacy modules
+Requires: asterisk = %{version}-%{release}
+
+%description legacy
+Legacy Modules, Chan_Sip Chan_OSS
+
 %package lua
 Summary: Lua resources for Asterisk
 Requires: asterisk = %{version}-%{release}
@@ -546,6 +547,14 @@ Requires: asterisk = %{version}-%{release}
 %description radius
 Applications for Asterisk that use RADIUS.
 %endif
+
+%package samples
+Summary: Samples for asterisk
+Requires: asterisk = %{version}-%{release}
+
+%description samples
+scripts and other samples
+
 
 %package skinny
 Summary: Modules for Asterisk that support the SCCP/Skinny protocol
@@ -690,7 +699,7 @@ rm main/fskmodem.c.old
 chmod -x contrib/scripts/dbsep.cgi
 
 
-## Options to include in the build
+# Options to include in the build
 %if 0%{ext_mp3}
 #cat menuselect.makeopts
 contrib/scripts/get_mp3_source.sh
@@ -722,7 +731,7 @@ echo "**************************************************************************
 #cat menuselect.makeopts
 echo "*******************************************************************************"
 
-## Generic configuration, assuming always above or equal centOS 7
+# Generic configuration, assuming always above or equal centOS 7
 %configure --with-imap=system --with-gsm=/usr --with-ilbc=/usr --with-libedit=yes --with-srtp --with-jansson-bundled --with-pjproject-bundled --with-externals-cache=%{_builddir}/asterisk-%{version}%{?_rc:-rc%{_rc}}%{?_beta:-beta%{_beta}}/cache LDFLAGS="%{ldflags}" NOISY_BUILD=1 CPPFLAGS="-fPIC"
 
 %make_build menuselect-tree NOISY_BUILD=1
@@ -763,7 +772,7 @@ touch apps/app_voicemail.so apps/app_directory.so
 %make_build progdocs %{makeargs}
 
 # fix dates so that we don't get multilib conflicts
-find doc/api/html -type f -print0 | xargs --null touch -r ChangeLog
+find doc/api -type f -print0 | xargs --null touch -r ChangeLog
 %endif
 
 %install
@@ -780,21 +789,18 @@ export ASTCFLAGS="%{optflags}"
 make install %{makeargs}
 make samples %{makeargs}
 
-## START: Development asterisk, manually added
+# START: Development asterisk, manually added
 if [ ! -d "%{buildroot}%{_includedir}" ]; then mkdir -p %{buildroot}%{_includedir}; fi
 install -m 644 include/asterisk.h   %{buildroot}%{_includedir}/asterisk.h
 cp      -rp    include/asterisk     %{buildroot}%{_includedir}
-## END
+# END
 
-## START: Clean extra config
+# START: Clean extra config, deprecated
 rm -f %{buildroot}%{_sysconfdir}/asterisk/app_mysql.conf
 rm -f %{buildroot}%{_sysconfdir}/asterisk/cdr_mysql.conf
 rm -f %{buildroot}%{_sysconfdir}/asterisk/cdr_syslog.conf
 rm -f %{buildroot}%{_sysconfdir}/asterisk/muted.conf
-rm -f %{buildroot}%{_sysconfdir}/asterisk/oss.conf
-rm -f %{buildroot}%{_sysconfdir}/asterisk/sip.conf
-rm -f %{buildroot}%{_sysconfdir}/asterisk/sip_notify.conf
-## END
+# END
 
 
 install -D -p -m 0644 %{SOURCE5} %{buildroot}%{_unitdir}/asterisk.service
@@ -822,29 +828,15 @@ mkdir -p %{buildroot}%{_localstatedir}/spool/asterisk/monitor
 mkdir -p %{buildroot}%{_localstatedir}/spool/asterisk/outgoing
 mkdir -p %{buildroot}%{_localstatedir}/spool/asterisk/uploads
 
-# We're not going to package any of the sample AGI scripts
-rm -f %{buildroot}%{astvarlibdir}/asterisk/agi-bin/*
-
-# Don't package the sample voicemail user
-rm -rf %{buildroot}%{_localstatedir}/spool/asterisk/voicemail/default
-
-# Don't package example phone provision configs
-rm -rf %{buildroot}%{astvarlibdir}/asterisk/phoneprov/*
-
 # these are compiled with -O0 and thus include unfortified code.
 rm -rf %{buildroot}%{_sbindir}/hashtest
 rm -rf %{buildroot}%{_sbindir}/hashtest2
-
-#
-rm -rf %{buildroot}%{_sysconfdir}/asterisk/app_skel.conf
-rm -rf %{buildroot}%{_sysconfdir}/asterisk/config_test.conf
-rm -rf %{buildroot}%{_sysconfdir}/asterisk/test_sorcery.conf
 
 rm -rf %{buildroot}%{_libdir}/libasteriskssl.so
 ln -s libasterisk.so.1 %{buildroot}%{_libdir}/libasteriskssl.so
 
 %if 0%{?apidoc}
-find doc/api/html -name \*.map -size 0 -delete
+find doc/api -name \*.map -size 0 -delete
 %endif
 
 # copy the alembic scripts
@@ -898,7 +890,7 @@ getent passwd %{_user} >/dev/null || \
     useradd -r -s /sbin/nologin  -d %{astvarlibdir}/%{name} -M \
     -c 'Asterisk User' -g %{_group} %{_user}
 
-## Add extra group to user if they are available
+# Add extra group to user if they are available
 getent group audio >/dev/null && %{_sbindir}/usermod -a -G audio %{_user}
 getent group dialout >/dev/null && %{_sbindir}/usermod -a -G dialout %{_user}
 
@@ -957,29 +949,22 @@ fi
 %dir %{_libdir}/asterisk
 %dir %{_libdir}/asterisk/modules
 %{_libdir}/asterisk/modules/app_agent_pool.so
-%{_libdir}/asterisk/modules/app_alarmreceiver.so
-%{_libdir}/asterisk/modules/app_amd.so
-%{_libdir}/asterisk/modules/app_attended_transfer.so
 %{_libdir}/asterisk/modules/app_authenticate.so
-%{_libdir}/asterisk/modules/app_blind_transfer.so
 %{_libdir}/asterisk/modules/app_bridgeaddchan.so
 %{_libdir}/asterisk/modules/app_bridgewait.so
 %{_libdir}/asterisk/modules/app_cdr.so
 %{_libdir}/asterisk/modules/app_celgenuserevent.so
-%{_libdir}/asterisk/modules/app_chanisavail.so
 %{_libdir}/asterisk/modules/app_channelredirect.so
 %{_libdir}/asterisk/modules/app_chanspy.so
 %{_libdir}/asterisk/modules/app_confbridge.so
 %{_libdir}/asterisk/modules/app_controlplayback.so
 %{_libdir}/asterisk/modules/app_db.so
 %{_libdir}/asterisk/modules/app_dial.so
-%{_libdir}/asterisk/modules/app_dictate.so
 %{_libdir}/asterisk/modules/app_directed_pickup.so
 %{_libdir}/asterisk/modules/app_disa.so
 %{_libdir}/asterisk/modules/app_dumpchan.so
 %{_libdir}/asterisk/modules/app_echo.so
 %{_libdir}/asterisk/modules/app_exec.so
-%{_libdir}/asterisk/modules/app_externalivr.so
 %{_libdir}/asterisk/modules/app_followme.so
 %{_libdir}/asterisk/modules/app_forkcdr.so
 %{_libdir}/asterisk/modules/app_milliwatt.so
@@ -995,30 +980,22 @@ fi
 #%%{_libdir}/asterisk/modules/app_readfile.so
 %{_libdir}/asterisk/modules/app_read.so
 %{_libdir}/asterisk/modules/app_record.so
-%{_libdir}/asterisk/modules/app_saycounted.so
-#%%{_libdir}/asterisk/modules/app_saycountpl.so
 %{_libdir}/asterisk/modules/app_sayunixtime.so
 %{_libdir}/asterisk/modules/app_senddtmf.so
 %{_libdir}/asterisk/modules/app_sendtext.so
 #%%{_libdir}/asterisk/modules/app_setcallerid.so
-%{_libdir}/asterisk/modules/app_sms.so
 %{_libdir}/asterisk/modules/app_softhangup.so
 %{_libdir}/asterisk/modules/app_speech_utils.so
 %{_libdir}/asterisk/modules/app_stack.so
 %{_libdir}/asterisk/modules/app_stasis.so
-%{_libdir}/asterisk/modules/app_statsd.so
 %{_libdir}/asterisk/modules/app_stream_echo.so
 %{_libdir}/asterisk/modules/app_system.so
 %{_libdir}/asterisk/modules/app_talkdetect.so
-%{_libdir}/asterisk/modules/app_test.so
 %{_libdir}/asterisk/modules/app_transfer.so
 %{_libdir}/asterisk/modules/app_userevent.so
 %{_libdir}/asterisk/modules/app_verbose.so
-%{_libdir}/asterisk/modules/app_waitforring.so
-%{_libdir}/asterisk/modules/app_waitforsilence.so
 %{_libdir}/asterisk/modules/app_waituntil.so
 %{_libdir}/asterisk/modules/app_while.so
-%{_libdir}/asterisk/modules/app_zapateller.so
 %{_libdir}/asterisk/modules/bridge_builtin_features.so
 %{_libdir}/asterisk/modules/bridge_builtin_interval_features.so
 %{_libdir}/asterisk/modules/bridge_holding.so
@@ -1181,17 +1158,75 @@ fi
 %{_libdir}/asterisk/modules/res_stun_monitor.so
 %{_libdir}/asterisk/modules/res_timing_pthread.so
 %{_libdir}/asterisk/modules/res_timing_timerfd.so
+%{_libdir}/asterisk/modules/res_tonedetect.so
 
-## MANUAL: added to asterisk 18
+# MANUAL: added to asterisk 18
 %{_libdir}/asterisk/modules/app_audiosocket.so
 %{_libdir}/asterisk/modules/chan_audiosocket.so
-%{_libdir}/asterisk/modules/app_mp3.so
 %{_libdir}/asterisk/modules/res_audiosocket.so
 %{_libdir}/asterisk/modules/res_pjsip_stir_shaken.so
 %{_libdir}/asterisk/modules/res_stir_shaken.so
 %{_libdir}/asterisk/modules/res_prometheus.so
 %{_libdir}/asterisk/modules/res_resolver_unbound.so
 %{_libdir}/asterisk/modules/format_mp3.so
+
+
+
+# Extended Modules
+# ---------------------------
+%{_libdir}/asterisk/modules/app_alarmreceiver.so
+%{_libdir}/asterisk/modules/app_amd.so
+%{_libdir}/asterisk/modules/app_attended_transfer.so
+%{_libdir}/asterisk/modules/app_blind_transfer.so
+%{_libdir}/asterisk/modules/app_chanisavail.so
+%{_libdir}/asterisk/modules/app_dictate.so
+%{_libdir}/asterisk/modules/app_externalivr.so
+
+#  Technology independent async DTMF storage
+%{_libdir}/asterisk/modules/app_dtmfstore.so
+
+#  MF Sender and Receiver Applications
+%{_libdir}/asterisk/modules/app_mf.so
+
+# Silly MP3 Application
+%{_libdir}/asterisk/modules/app_mp3.so
+
+# Reload Modules
+%{_libdir}/asterisk/modules/app_reload.so
+
+# Decline words according to channel language
+%{_libdir}/asterisk/modules/app_saycounted.so
+#%%{_libdir}/asterisk/modules/app_saycountpl.so
+
+# SF Sender and Receiver Applications
+%{_libdir}/asterisk/modules/app_sf.so
+
+
+%{_libdir}/asterisk/modules/app_sms.so
+%{_libdir}/asterisk/modules/app_statsd.so
+%{_libdir}/asterisk/modules/app_test.so
+
+# Conditionals
+%{_libdir}/asterisk/modules/app_waitforcond.so
+%{_libdir}/asterisk/modules/app_waitforring.so
+%{_libdir}/asterisk/modules/app_waitforsilence.so
+
+# Block Telemarketers with Special Information Tone
+%{_libdir}/asterisk/modules/app_zapateller.so
+# Function to drop frames on a channel
+%{_libdir}/asterisk/modules/func_frame_drop.so
+
+# JSON decoding function
+%{_libdir}/asterisk/modules/func_json.so
+
+# Say application files
+%{_libdir}/asterisk/modules/func_sayfiles.so
+
+# Frequency inverting voice scrambler
+%{_libdir}/asterisk/modules/func_scramble.so
+
+
+
 
 %{_sbindir}/astcanary
 %{_sbindir}/astdb2sqlite3
@@ -1206,7 +1241,7 @@ fi
 %{_sbindir}/astdb2bdb
 
 
-## Extra binaries
+# Extra binaries
 %{_sbindir}/check_expr
 %{_sbindir}/check_expr2
 
@@ -1220,13 +1255,11 @@ fi
 
 %attr(0750,asterisk,asterisk) %dir %{_sysconfdir}/asterisk
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/acl.conf
-%attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/adsi.conf
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/agents.conf
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/alarmreceiver.conf
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/amd.conf
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/ari.conf
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/ast_debug_tools.conf
-%attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/asterisk.adsi
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/asterisk.conf
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/ccss.conf
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/cdr.conf
@@ -1269,7 +1302,6 @@ fi
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/sorcery.conf
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/stasis.conf
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/statsd.conf
-%attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/telcordia-1.adsi
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/udptl.conf
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/users.conf
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/vpb.conf
@@ -1311,6 +1343,28 @@ fi
 
 %{astvarlibdir}/asterisk/scripts/
 
+%files samples
+%attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/app_skel.conf
+%attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/config_test.conf
+%attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/test_sorcery.conf
+
+# Skeleton (sample) Application
+%{_libdir}/asterisk/modules/app_skel.so
+
+# IVR Demo Application
+%{_libdir}/asterisk/modules/app_ivrdemo.so
+
+# AGI Sample Scripts
+%{astvarlibdir}/asterisk/agi-bin/*
+
+# sample voicemail user
+%{_localstatedir}/spool/asterisk/voicemail/default
+
+# example phone provision configs
+%{astvarlibdir}/asterisk/phoneprov/*
+
+
+
 %files ael
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/extensions.ael
 %{_libdir}/asterisk/modules/pbx_ael.so
@@ -1325,7 +1379,7 @@ fi
 
 %if %{?apidoc}
 %files apidoc
-%doc doc/api/html/*
+%doc doc/api/*
 %endif
 
 %files calendar
@@ -1334,6 +1388,8 @@ fi
 %{_libdir}/asterisk/modules/res_calendar_caldav.so
 %{_libdir}/asterisk/modules/res_calendar_ews.so
 %{_libdir}/asterisk/modules/res_calendar_icalendar.so
+%{_libdir}/asterisk/modules/res_calendar_exchange.so
+
 
 %if 0%{?corosync}
 %files corosync
@@ -1469,6 +1525,20 @@ fi
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/phone.conf
 %{_libdir}/asterisk/modules/chan_phone.so
 %endif
+
+%files legacy
+%attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/oss.conf
+%attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/sip.conf
+%attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/sip_notify.conf
+%attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/adsi.conf
+%attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/asterisk.adsi
+%attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/telcordia-1.adsi
+
+%{_libdir}/asterisk/modules/res_monitor.so
+%{_libdir}/asterisk/modules/res_adsi.so
+%{_libdir}/asterisk/modules/chan_oss.so
+%{_libdir}/asterisk/modules/chan_sip.so
+
 
 %files pjsip
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/pjsip.conf
@@ -1607,7 +1677,11 @@ fi
 %endif
 
 %changelog
-* Tue Dec 16 2020 Francisco Correia <fcorreia@users.noreply.github.com> - 18.1.0
+* Mon Feb 28 2022 Francisco Correia <fcorreia@users.noreply.github.com> - 18.10.0
+- Packaging for the latest 18 LTS version
+- https://downloads.asterisk.org/pub/telephony/asterisk/ChangeLog-18.10.0
+
+* Wed Dec 16 2020 Francisco Correia <fcorreia@users.noreply.github.com> - 18.1.0
 - Packaging for the latest 18 LTS version
 - https://downloads.asterisk.org/pub/telephony/asterisk/ChangeLog-18.1.0
 
@@ -1615,12 +1689,12 @@ fi
 - Packaging for the latest 18 LTS version, Release candidate 2
 - https://downloads.asterisk.org/pub/telephony/asterisk/ChangeLog-18.0.0-rc2
 
-* Thu Oct 13 2020 Francisco Correia <fcorreia@users.noreply.github.com> - 18.0.0-rc1
+* Tue Oct 13 2020 Francisco Correia <fcorreia@users.noreply.github.com> - 18.0.0-rc1
 - Packaging for the latest 18 LTS version
 - Remove depracated packages
 - static cconfiguration
 
-* Thu Sep 18 2020 Francisco Correia <fcorreia@users.noreply.github.com> - 16.13.0
+* Fri Sep 18 2020 Francisco Correia <fcorreia@users.noreply.github.com> - 16.13.0
 - Packaging for the latest 16 LTS version
 
 * Thu Apr 16 2020 Francisco Correia <fcorreia@users.noreply.github.com> - 16.9.0
