@@ -198,17 +198,19 @@ function submit_spec(){
 function build_rpm(){
     validate_build
 
-
     echo "Build package: ${RPM_NAME}, Release: ${RPM_RELEASE}"
-    ## --buildroot=${PWD}/rpmbuild
-    RPMBUILD_OPTIONS="--define='%rpm_name  %{expand:   %%(echo ${RPM_NAME})}' --define='%rpm_release  %{expand:%%(echo ${RPM_RELEASE} )}'"
     if [ ! "x" == "${RPM_VERSION}x" ]; then
-      RPMBUILD_OPTIONS="${RPMBUILD_OPTIONS} --define='%rpm_version  %{expand:%%(echo ${RPM_VERSION})}'"
+        rpmbuild    --define='%rpm_name  %{expand:   %%(echo ${RPM_NAME})}'  \
+                    --define='%rpm_version  %{expand:%%(echo ${RPM_VERSION})}'  \
+                    --define='%rpm_release  %{expand:%%(echo ${RPM_RELEASE} )}'  \
+                    ${RPM_SPEC} \
+                    -ba
+    else
+        rpmbuild    --define='%rpm_name  %{expand:   %%(echo ${RPM_NAME})}'  \
+                    --define='%rpm_release  %{expand:%%(echo ${RPM_RELEASE} )}'  \
+                    ${RPM_SPEC} \
+                    -ba
     fi
-
-    echo "> rpmbuild ${RPMBUILD_OPTIONS} ${RPM_SPEC} -ba"
-    rpmbuild ${RPMBUILD_OPTIONS} ${RPM_SPEC} -ba
-##	--buildroot=${HOME}/rpmbuild \
 }
 
 
@@ -216,13 +218,16 @@ function build_rpm(){
 function rpm_sources {
     validate_build
 
-    SPECTOOL_OPTIONS="--define \"rpm_name ${RPM_NAME}\" --define \"rpm_release ${RPM_RELEASE}\""
     if [ ! "x" == "${RPM_VERSION}x" ]; then
-      SPECTOOL_OPTIONS="${SPECTOOL_OPTIONS} --define \"rpm_version ${RPM_VERSION}\""
+        spectool    --define "rpm_name ${RPM_NAME}"  \
+                    --define "rpm_version ${RPM_VERSION}"  \
+                    --define "rpm_release ${RPM_RELEASE}"  \
+                    --get-files --sourcedir  ${RPM_SPEC}
+    else
+        spectool    --define "rpm_name ${RPM_NAME}"  \
+                    --define "rpm_release ${RPM_RELEASE}"  \
+                    --get-files --sourcedir  ${RPM_SPEC}
     fi
-
-    echo "> spectool ${SPECTOOL_OPTIONS} --get-files --sourcedir  ${RPM_SPEC}"
-    spectool ${SPECTOOL_OPTIONS} --get-files --sourcedir  ${RPM_SPEC}
 }
 
 
