@@ -9,7 +9,7 @@
 ##
 ##
 %define name        vault
-%define version     1.6.2
+%define version     %{rpm_version}
 %define release     %{rpm_release}.%{disttype}%{distnum}
 %define conf_dir    %{_sysconfdir}/%{name}
 %define work_dir    %{_sharedstatedir}/%{name}
@@ -139,6 +139,6 @@ fi
 
 
 %changelog
-* Tue Jan 04 2021 Francisco Correia <fcorreia@users.noreply.github.com> - 1.6.2
+* Mon Jan 04 2021 Francisco Correia <fcorreia@users.noreply.github.com> - 1.6.2
 - Initial package
 
