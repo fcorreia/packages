@@ -1,0 +1,27 @@
+--- signalwire-client-c/CMakeLists.txt	2019-05-13 08:03:05.000000000 -0400
++++ signalwire-client-c/CMakeLists.txt.dlucio	2020-03-02 12:07:22.290000000 -0500
+@@ -366,18 +366,23 @@ set(CONF_INCLUDE_DIRS "${PROJECT_SOURCE_
+ 
+ if (NOT KS_PLAT_WIN)
+ 	# Set install targets
+-	install(TARGETS signalwire_client COMPONENT "runtime" EXPORT SignalWireClientConfig DESTINATION lib)
+ 	install(DIRECTORY inc/signalwire-client-c COMPONENT "runtime" DESTINATION include PATTERN internal EXCLUDE)
+ 
+ 	# Set path for pkg-config based on ARCH and distro type
+ 	if("${CMAKE_OS_NAME}" STREQUAL "Centos") # pkg-config --variable pc_path pkg-config
+ 		if(${CPACK_SYSTEM_NAME} MATCHES "x86_64")
+ 			install(FILES ${PROJECT_BINARY_DIR}/signalwire_client.pc COMPONENT "runtime" DESTINATION lib64/pkgconfig)
++			install(TARGETS signalwire_client COMPONENT "runtime" EXPORT SignalWireClientConfig DESTINATION lib64)
++			set(PC_LIBDIR ${CMAKE_INSTALL_PREFIX}/lib64)
+ 		else()
+ 			install(FILES ${PROJECT_BINARY_DIR}/signalwire_client.pc COMPONENT "runtime" DESTINATION lib/pkgconfig)
++			install(TARGETS signalwire_client COMPONENT "runtime" EXPORT SignalWireClientConfig DESTINATION lib)
++			set(PC_LIBDIR ${CMAKE_INSTALL_PREFIX}/lib)
+ 		endif()
+ 	else()
+ 		install(FILES ${PROJECT_BINARY_DIR}/signalwire_client.pc COMPONENT "runtime" DESTINATION lib/pkgconfig)
++		install(TARGETS signalwire_client COMPONENT "runtime" EXPORT SignalWireClientConfig DESTINATION lib)
++		set(PC_LIBDIR ${CMAKE_INSTALL_PREFIX}/lib)
+ 	endif()
+ 
+ 	install(EXPORT SignalWireClientConfig COMPONENT "runtime" DESTINATION include/signalwire-client-c/cmake)

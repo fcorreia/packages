@@ -6,6 +6,8 @@ Custom Software Packaging
 ## Tools for Packaging
 
 ```shell script
+yum update -y && yum install epel-release
+yum groups install -y  "Development Tools"
 ## Minimal tools to install
 yum install -y gcc rpm-build rpm-devel rpmlint make python bash coreutils diffutils patch rpmdevtools
 ```
