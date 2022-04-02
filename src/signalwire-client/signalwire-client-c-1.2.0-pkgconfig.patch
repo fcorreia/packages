@@ -1,0 +1,10 @@
+--- signalwire-client-c/signalwire_client.pc.in	2019-05-13 08:03:05.000000000 -0400
++++ signalwire-client-c/signalwire_client.pc.in.dlucio	2020-03-02 11:48:29.370000000 -0500
+@@ -1,6 +1,6 @@
+ prefix=@PC_PREFIX@
+ exec_prefix=${prefix}
+-libdir=${prefix}/lib
++libdir=@PC_LIBDIR@
+ includedir=${prefix}/include
+ definitions=@PC_DEFINITIONS@
+ 
