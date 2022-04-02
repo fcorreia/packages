@@ -7,9 +7,7 @@
 
 ```shell script
 
-yum install centos-release-scl 
-
-yum install devtoolset-7
+yum install -y centos-release-scl && yum install -y devtoolset-7
 
 # Enable environment
 $ scl enable devtoolset-7 bash

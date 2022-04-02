@@ -6,7 +6,7 @@
 ##
 ##
 %define name        redis
-%define version     6.2.1
+%define version     6.2.6
 %define release     %{rpm_release}.%{disttype}%{distnum}
 %define home_dir    %{_sharedstatedir}/%{name}
 %define work_dir    %{_sharedstatedir}/%{name}
@@ -28,7 +28,7 @@ Summary:            In-Memory persistent key-value database
 Group:              Application/Databases
 License:            BSD
 URL:                https://redis.io/
-Source0:            http://download.redis.io/releases/redis-%{version}.tar.gz
+Source0:            https://download.redis.io/releases/redis-%{version}.tar.gz
 Source1:            redis.service
 Source2:            redis.sysconfig
 Source3:            redis.SHA256SUM

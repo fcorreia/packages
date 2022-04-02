@@ -6,7 +6,8 @@ Custom Software Packaging
 ## Tools for Packaging
 
 ```shell script
-yum update -y && yum install epel-release
+$ docker run --name build-el7 -it -v ${HOME}/Workspace:/workspace centos:7
+yum update -y && yum install -y epel-release
 yum groups install -y  "Development Tools"
 ## Minimal tools to install
 yum install -y gcc rpm-build rpm-devel rpmlint make python bash coreutils diffutils patch rpmdevtools
