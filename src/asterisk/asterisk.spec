@@ -59,13 +59,12 @@ Group:		Applications/System
 URL:		http://www.asterisk.org/
 
 Source0:          http://downloads.asterisk.org/pub/telephony/asterisk/releases/asterisk-%{version}%{?_rc:-rc%{_rc}}%{?_beta:-beta%{_beta}}.tar.gz
-Source1:          http://downloads.asterisk.org/pub/telephony/asterisk/releases/asterisk-%{version}%{?_rc:-rc%{_rc}}%{?_beta:-beta%{_beta}}.sha256
-Source2:          http://downloads.asterisk.org/pub/telephony/asterisk/releases/asterisk-%{version}%{?_rc:-rc%{_rc}}%{?_beta:-beta%{_beta}}.tar.gz.asc
-Source3:          asterisk-logrotate
-Source4:          menuselect.makedeps
-Source5:          menuselect.makeopts
-Source6:          asterisk.service
-Source7:          asterisk-tmpfiles
+Source1:          http://downloads.asterisk.org/pub/telephony/asterisk/releases/asterisk-%{version}%{?_rc:-rc%{_rc}}%{?_beta:-beta%{_beta}}.tar.gz.asc
+Source2:          asterisk-logrotate
+Source3:          menuselect.makedeps
+Source4:          menuselect.makeopts
+Source5:          asterisk.service
+Source6:          asterisk-tmpfiles
 # GPG keyring with Asterisk developer signatures
 # Created by running:
 #gpg2 --no-default-keyring --keyring ./asterisk-gpgkeys.gpg \
@@ -78,13 +77,13 @@ Source7:          asterisk-tmpfiles
 #0x57E769BC37906C091E7F641F6CB44E557BD982D8 \
 #0x0F77FB5D216A02390B4C51DB7C2C8A8BCB3F61BD \
 #0xF2FC93DB7587BD1FB49E045A5D984BE337191CE7
-Source8:          asterisk-gpgkeys.gpg
+Source7:          asterisk-gpgkeys.gpg
 
 # Now building Asterisk with bundled pjproject, because they apply custom patches to it
-Source9:          https://raw.githubusercontent.com/asterisk/third-party/master/pjproject/%{pjsip_version}/pjproject-%{pjsip_version}.tar.bz2
+Source8:          https://raw.githubusercontent.com/asterisk/third-party/master/pjproject/%{pjsip_version}/pjproject-%{pjsip_version}.tar.bz2
 
 # Bundling jansson on EL7 and EL8, because the version in CentOS is too old
-Source10:         http://www.digip.org/jansson/releases/jansson-%{jansson_version}.tar.bz2
+Source9:          http://www.digip.org/jansson/releases/jansson-%{jansson_version}.tar.bz2
 
 %if 0%{?fedora} || 0%{?rhel} >= 8
 Patch0:           asterisk-mariadb.patch
@@ -656,17 +655,17 @@ Jabber/XMPP resources for Asterisk.
 %prep
 %if 0%{?fedora} || 0%{?rhel} >=8
 # only verifying on Fedora and RHEL >=8 due to version of gpg
-gpgv2 --keyring %{SOURCE8} %{SOURCE2} %{SOURCE0}
+gpgv2 --keyring %{SOURCE7} %{SOURCE1} %{SOURCE0}
 %endif
 %setup -q -n asterisk-%{version}%{?_rc:-rc%{_rc}}%{?_beta:-beta%{_beta}}
 
 
 # copy the pjproject tarball to the cache/ directory
 mkdir cache
-cp %{SOURCE9} cache/
+cp %{SOURCE8} cache/
 
 %if 0%{?rhel} >= 7
-cp %{SOURCE10} cache/
+cp %{SOURCE9} cache/
 %endif
 
 echo '*************************************************************************'
@@ -682,8 +681,8 @@ echo '*************************************************************************'
 %patch1 -p1
 %endif
 
-cp %{SOURCE4} menuselect.makedeps
-cp %{SOURCE5} menuselect.makeopts
+cp %{S:3} menuselect.makedeps
+cp %{S:4} menuselect.makeopts
 
 
 
@@ -804,9 +803,9 @@ rm -f %{buildroot}%{_sysconfdir}/asterisk/muted.conf
 # END
 
 
-install -D -p -m 0644 %{SOURCE6} %{buildroot}%{_unitdir}/asterisk.service
+install -D -p -m 0644 %{SOURCE5} %{buildroot}%{_unitdir}/asterisk.service
 rm -f %{buildroot}%{_sbindir}/safe_asterisk
-install -D -p -m 0644 %{SOURCE3} %{buildroot}%{_sysconfdir}/logrotate.d/asterisk
+install -D -p -m 0644 %{S:2} %{buildroot}%{_sysconfdir}/logrotate.d/asterisk
 
 rm %{buildroot}%{_libdir}/asterisk/modules/app_directory.so
 rm %{buildroot}%{_libdir}/asterisk/modules/app_voicemail.so
@@ -844,7 +843,7 @@ find doc/api -name \*.map -size 0 -delete
 cp -rp contrib/ast-db-manage %{buildroot}%{astvarlibdir}/asterisk/ast-db-manage
 
 %if %{tmpfilesd}
-install -D -p -m 0644 %{SOURCE7} %{buildroot}/usr/lib/tmpfiles.d/asterisk.conf
+install -D -p -m 0644 %{SOURCE6} %{buildroot}/usr/lib/tmpfiles.d/asterisk.conf
 mkdir -p %{buildroot}%{astvarrundir}
 %endif
 
