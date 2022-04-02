@@ -13,7 +13,7 @@
 ##
 ##
 %define name        prometheus-mysqld-exporter
-%define version     0.12.1
+%define version     0.14.0
 %define release     %{rpm_release}.%{disttype}%{distnum}
 %define home_dir    /opt/prometheus
 

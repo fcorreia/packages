@@ -13,7 +13,7 @@
 ##
 ##
 %define name        prometheus-node-exporter
-%define version     1.0.1
+%define version     1.3.1
 %define release     %{rpm_release}.%{disttype}%{distnum}
 %define home_dir    /opt/prometheus
 

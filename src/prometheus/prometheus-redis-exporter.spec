@@ -13,7 +13,7 @@
 ##
 ##
 %define name        prometheus-redis-exporter
-%define version     1.12.0
+%define version     1.37.0
 %define release     %{rpm_release}.%{disttype}%{distnum}
 %define home_dir    /opt/prometheus
 

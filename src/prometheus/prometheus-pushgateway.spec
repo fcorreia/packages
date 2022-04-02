@@ -13,7 +13,7 @@
 ##
 ##
 %define name        prometheus-pushgateway
-%define version     1.3.0
+%define version     1.4.2
 %define release     %{rpm_release}.%{disttype}%{distnum}
 %define home_dir    /opt/prometheus
 %define work_dir    %{_sharedstatedir}/prometheus/pushgateway

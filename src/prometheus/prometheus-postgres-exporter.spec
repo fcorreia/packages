@@ -12,7 +12,7 @@
 ##
 ##
 %define name        prometheus-postgres-exporter
-%define version     0.8.0
+%define version     0.10.1
 %define release     %{rpm_release}.%{disttype}%{distnum}
 %define home_dir    /opt/prometheus
 
@@ -33,7 +33,7 @@ Summary:            A PostgresSQL metric exporter for Prometheus
 Group:              System Environment/Base
 License:            APLv2.0
 URL:                https://github.com/wrouesnel/postgres_exporter
-Source0:            https://github.com/wrouesnel/postgres_exporter/releases/download/v%{version}/postgres_exporter_v%{version}_linux-amd64.tar.gz
+Source0:            https://github.com/prometheus-community/postgres_exporter/releases/download/v%{version}/postgres_exporter-%{version}.linux-amd64.tar.gz
 Source1:            %{name}.service
 Source2:            %{name}.defaults
 
@@ -51,7 +51,7 @@ versions: 9.1 and up.
 %install
 
 
-install -D  postgres_exporter_v%{version}_linux-amd64/postgres_exporter    \
+install -D  postgres_exporter-%{version}.linux-amd64/postgres_exporter    \
             %{buildroot}%{home_dir}/bin/postgres_exporter
 
 

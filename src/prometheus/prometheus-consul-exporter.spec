@@ -13,7 +13,7 @@
 ##
 ##
 %define name        prometheus-consul-exporter
-%define version     0.7.1
+%define version     0.8.0
 %define release     %{rpm_release}.%{disttype}%{distnum}
 %define home_dir    /opt/prometheus
 

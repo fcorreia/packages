@@ -13,7 +13,7 @@
 ##
 ##
 %define name        prometheus
-%define version     2.21.0
+%define version     2.34.0
 %define release     %{rpm_release}.%{disttype}%{distnum}
 %define home_dir    /opt/%{name}
 %define work_dir    %{_sharedstatedir}/%{name}

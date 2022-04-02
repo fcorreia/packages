@@ -13,7 +13,7 @@
 ##
 ##
 %define name        prometheus-alertmanager
-%define version     0.21.0
+%define version     0.24.0
 %define release     %{rpm_release}.%{disttype}%{distnum}
 %define home_dir    /opt/prometheus
 %define work_dir    %{_sharedstatedir}/prometheus/alertmanager
