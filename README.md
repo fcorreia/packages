@@ -38,6 +38,9 @@ rpm --showrc
 
 # Evaluate a macro
 $ rpm --eval %{_sharedstatedir}
+
+# List available versions of a package
+$ yum --showduplicates list available <package-name>
 ```
 
 

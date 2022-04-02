@@ -9,7 +9,7 @@
 ##
 ##
 %define name        consul
-%define version     1.9.13
+%define version     %{rpm_version}
 %define release     %{rpm_release}.%{disttype}%{distnum}
 %define home_dir    /opt/%{name}
 %define work_dir    %{_sharedstatedir}/%{name}
